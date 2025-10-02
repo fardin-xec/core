@@ -1,0 +1,3450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Replace *** Your URL Here ***  with your URL e.g https://staging-ws.oracle.com
+Valid WSDL for Unifier version 18.8
+Changes made 
+** new Service added updateWBS (17.7)
+** new Service added sortCostSheet (17.10)
+** added options tag to updateScheduleActivitiesFromFileV2 and createScheduleActivitiesFromFileV2 (17.11)
+-->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax21="http://xml.util.webservices.skire.com/xsd" xmlns:ns="http://general.service.webservices.skire.com" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://general.service.webservices.skire.com">
+	<wsdl:types>
+		<xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://xml.util.webservices.skire.com/xsd">
+			<xs:complexType name="XMLObject">
+				<xs:sequence>					
+					<xs:element minOccurs="0" name="statusCode" type="xs:int"/>
+					<xs:element minOccurs="0" name="xmlcontents" nillable="true" type="xs:string"/>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="errorStatus" nillable="true" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="FileData">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="datahandler" nillable="true" type="xs:base64Binary"/>
+					<xs:element minOccurs="0" name="filename" nillable="true" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="XMLFileData">
+				<xs:complexContent>
+					<xs:extension base="ax21:XMLObject">
+						<xs:sequence>
+							<xs:element minOccurs="0" name="datahandler" nillable="true" type="xs:base64Binary"/>
+							<xs:element minOccurs="0" name="filename" nillable="true" type="xs:string"/>
+						</xs:sequence>
+					</xs:extension>
+				</xs:complexContent>
+			</xs:complexType>
+		</xs:schema>
+		<xs:schema xmlns:ax22="http://xml.util.webservices.skire.com/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://general.service.webservices.skire.com">
+			<xs:import namespace="http://xml.util.webservices.skire.com/xsd"/>
+			<xs:element name="createUpdateResource">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="resourceXML" nillable="true" type="xs:string"/>              
+
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createUpdateResourceResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getProjectShellList">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="options" nillable="true" type="xs:string"/>              
+
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getProjectShellListResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getScheduleSheetDataMaps">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectnumber" nillable="true" type="xs:string"/>              
+						<xs:element minOccurs="0" name="sheetName" nillable="true" type="xs:string"/>              
+						<xs:element minOccurs="0" name="options" nillable="true" type="xs:string"/>              
+
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getScheduleSheetDataMapsResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getScheduleSheetList">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectnumber" nillable="true" type="xs:string"/>              						             
+						<xs:element minOccurs="0" name="options" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getScheduleSheetListResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateUserGroupMembership">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="membershipXML" nillable="true" type="xs:string"/> 
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateUserGroupMembershipResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="updateUserShellMembership">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="membershipXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateUserShellMembershipResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="updateScheduleActivitiesFromFileV2">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>              
+						<xs:element minOccurs="0" name="sheetName" nillable="true" type="xs:string"/>              
+						<xs:element minOccurs="0" name="iszipfile" nillable="true" type="xs:string"/> 
+						<xs:element minOccurs="0" name="options" nillable="true" type="xs:string"/> 						
+						<xs:element minOccurs="0"  name="files" nillable="true" type="ax22:FileData"/>              
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateScheduleActivitiesFromFileV2Response">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="createScheduleActivitiesFromFileV2">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>              
+						<xs:element minOccurs="0" name="sheetName" nillable="true" type="xs:string"/>              
+						<xs:element minOccurs="0" name="iszipfile" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="options" nillable="true" type="xs:string"/> 
+						<xs:element minOccurs="0"  name="files" nillable="true" type="ax22:FileData"/>              
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createScheduleActivitiesFromFileV2Response">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateBPRecordV2">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>              
+						<xs:element minOccurs="0" name="BPName" nillable="true" type="xs:string"/>              
+						<xs:element minOccurs="0" name="BPXML" nillable="true" type="xs:string"/>              
+						<xs:element minOccurs="0" name="options" nillable="true" type="xs:string"/>              
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateBPRecordV2Response">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>			
+
+			<xs:element name="getTransactionStatus">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="transXML" nillable="true" type="xs:string"/>              
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getTransactionStatusResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>	
+			<xs:element name="getSOV">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="recordNumber" nillable="true" type="xs:string"/>			
+
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getSOVResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>	
+			<xs:element name="getRoleList">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="filterOptions" nillable="true" type="xs:string"/>
+
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getRoleListResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>	
+			<xs:element name="getResourceList">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="filterOptions" nillable="true" type="xs:string"/>
+
+
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getResourceListResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>	
+
+			<xs:element name="getPlanningItem">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="recordNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="planningitem" nillable="true" type="xs:string"/>
+
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getPlanningItemResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>	
+			<xs:element name="updateUser">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>              
+						<xs:element minOccurs="0" name="userXML" nillable="true" type="xs:string"/>               
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateUserResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getUserList">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>               
+						<xs:element minOccurs="0" name="filterCondition" nillable="true" type="xs:string"/>               
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getUserListResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>			  
+			<xs:element name="createUser">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="copyFromUserPreferenceTemplate" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="userXML" nillable="true" type="xs:string"/>               
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createUserResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>	
+			<xs:element name="createUpdateRole">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="roleXML" nillable="true" type="xs:string"/>
+
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createUpdateRoleResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getSpaceList">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="spacetype" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="fieldnames" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="filterCondition" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getSpaceListResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="getLevelList">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="fieldnames" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="filterCondition" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getLevelListResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateLevel">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="levelXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateLevelResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createLevel">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="levelXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createLevelResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateSpace">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="spacetype" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="spaceXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateSpaceResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createSpace">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="spacetype" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="spaceXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createSpaceResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="updateShell">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="shellType" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="shellXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateShellResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateScheduleActivities">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="sheetName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="sheetXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateScheduleActivitiesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateScheduleActivitiesV2">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="sheetName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="sheetXML" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="options" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateScheduleActivitiesV2Response">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createScheduleActivitiesV2">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="sheetName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="sheetXML" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="options" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createScheduleActivitiesV2Response">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateSapBPRecord">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateSapBPRecordResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			
+			
+			<xs:element name="updateConfigurableModuleRecord">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="CMCode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="ClassName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="recordXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateConfigurableModuleRecordResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateCompleteBPRecord">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPXML" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="iszipfile" nillable="true" type="xs:string"/>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="files" nillable="true" type="ax22:FileData"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateCompleteBPRecordResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateColumnData">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="columnName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="columnXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateColumnDataResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateBPRecord">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateBPRecordResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getWBSStructure">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getWBSStructureResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>	
+			<xs:element name="getWBSCodes">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectnumber" nillable="true" type="xs:string"/>              						             
+						<xs:element minOccurs="0" name="options" nillable="true" type="xs:string"/>              
+
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getWBSCodesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>			
+			<xs:element name="getUDRData">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="reportName" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getUDRDataResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getShellList">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="shellType" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="filterCondition" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getShellListResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getScheduleActivities">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="sheetName" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getScheduleActivitiesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getSapBPRecord">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="recordNumber" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getSapBPRecordResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getSapBPList">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPName" nillable="true" type="xs:string"/>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="fieldnames" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="filterCondition" nillable="true" type="xs:string"/>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="filtervalues" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getSapBPListResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>			
+			<xs:element name="getCompleteBPRecord">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="recordNumber" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getCompleteBPRecordResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLFileData"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getColumnData">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="columnName" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getColumnDataResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getBPRecord">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="recordNumber" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getBPRecordResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getBPList">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPName" nillable="true" type="xs:string"/>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="fieldnames" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="filterCondition" nillable="true" type="xs:string"/>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="filtervalues" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getBPListResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createWBS">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="WBSXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createWBSResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateWBS">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="WBSXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateWBSResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="sortCostSheet">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="type" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="sortOrder" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="sortCostSheetResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createShell">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="copyFromShellTemplate" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="shellXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createShellResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createScheduleActivities">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="sheetName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="sheetXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createScheduleActivitiesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createSapBPRecord">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="sapPoNo" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="refBpName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createSapBPRecordResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createProject">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="cloneProjectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createProjectResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+
+
+			<xs:element name="createFundingStructure">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="WBSXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createFundingStructureResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateExchangeRates">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="ratesXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updateExchangeRatesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="getExchangeRates">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getExchangeRatesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createConfigurableModuleRecord">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="CMCode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="ClassName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="copyFromRecord" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="recordXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createConfigurableModuleRecordResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createCompleteBPRecord">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPXML" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="iszipfile" nillable="true" type="xs:string"/>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="files" nillable="true" type="ax22:FileData"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createCompleteBPRecordResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createBPRecord">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createBPRecordResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createAsset">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="assetClassName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="copyFromAsset" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="assetXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="createAssetResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="addCompleteBPLineItem">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPXML" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="iszipfile" nillable="true" type="xs:string"/>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="files" nillable="true" type="ax22:FileData"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="addCompleteBPLineItemResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="addBPLineItem">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="authcode" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="projectNumber" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPName" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="BPXML" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="addBPLineItemResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Ping">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="shortname" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="password" nillable="true" type="xs:string"/>
+						<xs:element minOccurs="0" name="version" nillable="true" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="PingResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="return" nillable="true" type="ax22:XMLObject"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>			    
+
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="createUpdateResourceRequest">
+		<wsdl:part name="parameters" element="ns:createUpdateResource"/>
+	</wsdl:message>
+	<wsdl:message name="createUpdateResourceResponse">
+		<wsdl:part name="parameters" element="ns:createUpdateResourceResponse"/>
+	</wsdl:message>	
+	<wsdl:message name="getProjectShellListRequest">
+		<wsdl:part name="parameters" element="ns:getProjectShellList"/>
+	</wsdl:message>
+	<wsdl:message name="getProjectShellListResponse">
+		<wsdl:part name="parameters" element="ns:getProjectShellListResponse"/>
+	</wsdl:message>	
+	<wsdl:message name="getScheduleSheetDataMapsRequest">
+		<wsdl:part name="parameters" element="ns:getScheduleSheetDataMaps"/>
+	</wsdl:message>
+	<wsdl:message name="getScheduleSheetDataMapsResponse">
+		<wsdl:part name="parameters" element="ns:getScheduleSheetDataMapsResponse"/>
+	</wsdl:message>	
+	<wsdl:message name="getScheduleSheetListRequest">
+		<wsdl:part name="parameters" element="ns:getScheduleSheetList"/>
+	</wsdl:message>
+	<wsdl:message name="getScheduleSheetListResponse">
+		<wsdl:part name="parameters" element="ns:getScheduleSheetListResponse"/>
+	</wsdl:message>		
+	<wsdl:message name="updateUserGroupMembershipRequest">
+		<wsdl:part name="parameters" element="ns:updateUserGroupMembership"/>
+	</wsdl:message>
+	<wsdl:message name="updateUserGroupMembershipResponse">
+		<wsdl:part name="parameters" element="ns:updateUserGroupMembershipResponse"/>
+	</wsdl:message>
+	<wsdl:message name="updateUserShellMembershipRequest">
+		<wsdl:part name="parameters" element="ns:updateUserShellMembership"/>
+	</wsdl:message>
+	<wsdl:message name="updateUserShellMembershipResponse">
+		<wsdl:part name="parameters" element="ns:updateUserShellMembershipResponse"/>
+	</wsdl:message>
+	<wsdl:message name="updateScheduleActivitiesFromFileV2Request">
+		<wsdl:part name="parameters" element="ns:updateScheduleActivitiesFromFileV2"/>
+	</wsdl:message>
+	<wsdl:message name="updateScheduleActivitiesFromFileV2Response">
+		<wsdl:part name="parameters" element="ns:updateScheduleActivitiesFromFileV2Response"/>
+	</wsdl:message>	
+	<wsdl:message name="createScheduleActivitiesFromFileV2Request">
+		<wsdl:part name="parameters" element="ns:createScheduleActivitiesFromFileV2"/>
+	</wsdl:message>
+	<wsdl:message name="createScheduleActivitiesFromFileV2Response">
+		<wsdl:part name="parameters" element="ns:createScheduleActivitiesFromFileV2Response"/>
+	</wsdl:message>
+	<wsdl:message name="updateBPRecordV2Request">
+		<wsdl:part name="parameters" element="ns:updateBPRecordV2"/>
+	</wsdl:message>
+	<wsdl:message name="updateBPRecordV2Response">
+		<wsdl:part name="parameters" element="ns:updateBPRecordV2Response"/>
+	</wsdl:message>
+
+	<wsdl:message name="getTransactionStatusRequest">
+		<wsdl:part name="parameters" element="ns:getTransactionStatus"/>
+	</wsdl:message>
+	<wsdl:message name="getTransactionStatusResponse">
+		<wsdl:part name="parameters" element="ns:getTransactionStatusResponse"/>
+	</wsdl:message>	
+	<wsdl:message name="getSOVRequest">
+		<wsdl:part name="parameters" element="ns:getSOV"/>
+	</wsdl:message>
+	<wsdl:message name="getSOVResponse">
+		<wsdl:part name="parameters" element="ns:getSOVResponse"/>
+	</wsdl:message>
+	<wsdl:message name="getRoleListRequest">
+		<wsdl:part name="parameters" element="ns:getRoleList"/>
+	</wsdl:message>
+	<wsdl:message name="getRoleListResponse">
+		<wsdl:part name="parameters" element="ns:getRoleListResponse"/>
+	</wsdl:message>	
+	<wsdl:message name="getResourceListRequest">
+		<wsdl:part name="parameters" element="ns:getResourceList"/>
+	</wsdl:message>
+	<wsdl:message name="getResourceListResponse">
+		<wsdl:part name="parameters" element="ns:getResourceListResponse"/>
+	</wsdl:message>
+	<wsdl:message name="getPlanningItemRequest">
+		<wsdl:part name="parameters" element="ns:getPlanningItem"/>
+	</wsdl:message>
+	<wsdl:message name="getPlanningItemResponse">
+		<wsdl:part name="parameters" element="ns:getPlanningItemResponse"/>
+	</wsdl:message>
+	<wsdl:message name="updateUserRequest">
+		<wsdl:part name="parameters" element="ns:updateUser"/>
+	</wsdl:message>
+	<wsdl:message name="updateUserResponse">
+		<wsdl:part name="parameters" element="ns:updateUserResponse"/>
+	</wsdl:message>
+	<wsdl:message name="getUserListRequest">
+		<wsdl:part name="parameters" element="ns:getUserList"/>
+	</wsdl:message>
+	<wsdl:message name="getUserListResponse">
+		<wsdl:part name="parameters" element="ns:getUserListResponse"/>
+	</wsdl:message>
+	<wsdl:message name="createUserRequest">
+		<wsdl:part name="parameters" element="ns:createUser"/>
+	</wsdl:message>
+	<wsdl:message name="createUserResponse">
+		<wsdl:part name="parameters" element="ns:createUserResponse"/>
+	</wsdl:message>
+	<wsdl:message name="createUpdateRoleRequest">
+		<wsdl:part name="parameters" element="ns:createUpdateRole"/>
+	</wsdl:message>
+	<wsdl:message name="createUpdateRoleResponse">
+		<wsdl:part name="parameters" element="ns:createUpdateRoleResponse"/>
+	</wsdl:message>	
+
+	<wsdl:message name="getSpaceListRequest">
+		<wsdl:part name="parameters" element="ns:getSpaceList"/>
+	</wsdl:message>
+	<wsdl:message name="getSpaceListResponse">
+		<wsdl:part name="parameters" element="ns:getSpaceListResponse"/>
+	</wsdl:message>
+	<wsdl:message name="getLevelListRequest">
+		<wsdl:part name="parameters" element="ns:getLevelList"/>
+	</wsdl:message>
+	<wsdl:message name="getLevelListResponse">
+		<wsdl:part name="parameters" element="ns:getLevelListResponse"/>
+	</wsdl:message>
+	<wsdl:message name="updateSpaceRequest">
+		<wsdl:part name="parameters" element="ns:updateSpace"/>
+	</wsdl:message>
+	<wsdl:message name="updateSpaceResponse">
+		<wsdl:part name="parameters" element="ns:updateSpaceResponse"/>
+	</wsdl:message>
+	<wsdl:message name="createSpaceRequest">
+		<wsdl:part name="parameters" element="ns:createSpace"/>
+	</wsdl:message>
+	<wsdl:message name="createSpaceResponse">
+		<wsdl:part name="parameters" element="ns:createSpaceResponse"/>
+	</wsdl:message>
+	<wsdl:message name="updateLevelRequest">
+		<wsdl:part name="parameters" element="ns:updateLevel"/>
+	</wsdl:message>
+	<wsdl:message name="updateLevelResponse">
+		<wsdl:part name="parameters" element="ns:updateLevelResponse"/>
+	</wsdl:message>
+	<wsdl:message name="createLevelRequest">
+		<wsdl:part name="parameters" element="ns:createLevel"/>
+	</wsdl:message>
+	<wsdl:message name="createLevelResponse">
+		<wsdl:part name="parameters" element="ns:createLevelResponse"/>
+	</wsdl:message>
+
+	<wsdl:message name="updateShellRequest">
+		<wsdl:part name="parameters" element="ns:updateShell"/>
+	</wsdl:message>
+	<wsdl:message name="updateShellResponse">
+		<wsdl:part name="parameters" element="ns:updateShellResponse"/>
+	</wsdl:message>
+	<wsdl:message name="PingRequest">
+		<wsdl:part name="parameters" element="ns:Ping"/>
+	</wsdl:message>
+	<wsdl:message name="PingResponse">
+		<wsdl:part name="parameters" element="ns:PingResponse"/>
+	</wsdl:message>
+	<wsdl:message name="updateBPRecordRequest">
+		<wsdl:part name="parameters" element="ns:updateBPRecord"/>
+	</wsdl:message>
+	<wsdl:message name="updateBPRecordResponse">
+		<wsdl:part name="parameters" element="ns:updateBPRecordResponse"/>
+	</wsdl:message>
+	<wsdl:message name="createBPRecordRequest">
+		<wsdl:part name="parameters" element="ns:createBPRecord"/>
+	</wsdl:message>
+	<wsdl:message name="createBPRecordResponse">
+		<wsdl:part name="parameters" element="ns:createBPRecordResponse"/>
+	</wsdl:message>
+	<wsdl:message name="updateScheduleActivitiesRequest">
+		<wsdl:part name="parameters" element="ns:updateScheduleActivities"/>
+	</wsdl:message>
+	<wsdl:message name="updateScheduleActivitiesResponse">
+		<wsdl:part name="parameters" element="ns:updateScheduleActivitiesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="updateScheduleActivitiesV2Request">
+		<wsdl:part name="parameters" element="ns:updateScheduleActivitiesV2"/>
+	</wsdl:message>
+	<wsdl:message name="updateScheduleActivitiesV2Response">
+		<wsdl:part name="parameters" element="ns:updateScheduleActivitiesV2Response"/>
+	</wsdl:message>
+	<wsdl:message name="createScheduleActivitiesV2Request">
+		<wsdl:part name="parameters" element="ns:createScheduleActivitiesV2"/>
+	</wsdl:message>
+	<wsdl:message name="createScheduleActivitiesV2Response">
+		<wsdl:part name="parameters" element="ns:createScheduleActivitiesV2Response"/>
+	</wsdl:message>	
+	<wsdl:message name="updateColumnDataRequest">
+		<wsdl:part name="parameters" element="ns:updateColumnData"/>
+	</wsdl:message>
+	<wsdl:message name="updateColumnDataResponse">
+		<wsdl:part name="parameters" element="ns:updateColumnDataResponse"/>
+	</wsdl:message>
+	<wsdl:message name="addCompleteBPLineItemRequest">
+		<wsdl:part name="parameters" element="ns:addCompleteBPLineItem"/>
+	</wsdl:message>
+	<wsdl:message name="addCompleteBPLineItemResponse">
+		<wsdl:part name="parameters" element="ns:addCompleteBPLineItemResponse"/>
+	</wsdl:message>
+	<wsdl:message name="getShellListRequest">
+		<wsdl:part name="parameters" element="ns:getShellList"/>
+	</wsdl:message>
+	<wsdl:message name="getShellListResponse">
+		<wsdl:part name="parameters" element="ns:getShellListResponse"/>
+	</wsdl:message>
+	<wsdl:message name="createWBSRequest">
+		<wsdl:part name="parameters" element="ns:createWBS"/>
+	</wsdl:message>
+	<wsdl:message name="createWBSResponse">
+		<wsdl:part name="parameters" element="ns:createWBSResponse"/>
+	</wsdl:message>
+	<wsdl:message name="updateWBSRequest">
+		<wsdl:part name="parameters" element="ns:updateWBS"/>
+	</wsdl:message>
+	<wsdl:message name="updateWBSResponse">
+		<wsdl:part name="parameters" element="ns:updateWBSResponse"/>
+	</wsdl:message>
+	<wsdl:message name="sortCostSheetRequest">
+		<wsdl:part name="parameters" element="ns:sortCostSheet"/>
+	</wsdl:message>
+	<wsdl:message name="sortCostSheetResponse">
+		<wsdl:part name="parameters" element="ns:sortCostSheetResponse"/>
+	</wsdl:message>
+	<wsdl:message name="createProjectRequest">
+		<wsdl:part name="parameters" element="ns:createProject"/>
+	</wsdl:message>
+	<wsdl:message name="createProjectResponse">
+		<wsdl:part name="parameters" element="ns:createProjectResponse"/>
+	</wsdl:message>
+	<wsdl:message name="getColumnDataRequest">
+		<wsdl:part name="parameters" element="ns:getColumnData"/>
+	</wsdl:message>
+	<wsdl:message name="getColumnDataResponse">
+		<wsdl:part name="parameters" element="ns:getColumnDataResponse"/>
+	</wsdl:message>
+	<wsdl:message name="getBPListRequest">
+		<wsdl:part name="parameters" element="ns:getBPList"/>
+	</wsdl:message>
+	<wsdl:message name="getBPListResponse">
+		<wsdl:part name="parameters" element="ns:getBPListResponse"/>
+	</wsdl:message>
+	<wsdl:message name="createConfigurableModuleRecordRequest">
+		<wsdl:part name="parameters" element="ns:createConfigurableModuleRecord"/>
+	</wsdl:message>
+	<wsdl:message name="createConfigurableModuleRecordResponse">
+		<wsdl:part name="parameters" element="ns:createConfigurableModuleRecordResponse"/>
+	</wsdl:message>
+	<wsdl:message name="updateSapBPRecordRequest">
+		<wsdl:part name="parameters" element="ns:updateSapBPRecord"/>
+	</wsdl:message>
+	<wsdl:message name="updateSapBPRecordResponse">
+		<wsdl:part name="parameters" element="ns:updateSapBPRecordResponse"/>
+	</wsdl:message>
+	<wsdl:message name="addBPLineItemRequest">
+		<wsdl:part name="parameters" element="ns:addBPLineItem"/>
+	</wsdl:message>
+	<wsdl:message name="addBPLineItemResponse">
+		<wsdl:part name="parameters" element="ns:addBPLineItemResponse"/>
+	</wsdl:message>
+	<wsdl:message name="getWBSStructureRequest">
+		<wsdl:part name="parameters" element="ns:getWBSStructure"/>
+	</wsdl:message>
+	<wsdl:message name="getWBSStructureResponse">
+		<wsdl:part name="parameters" element="ns:getWBSStructureResponse"/>
+	</wsdl:message>
+	<wsdl:message name="getWBSCodesRequest">
+		<wsdl:part name="parameters" element="ns:getWBSCodes"/>
+	</wsdl:message>
+	<wsdl:message name="getWBSCodesResponse">
+		<wsdl:part name="parameters" element="ns:getWBSCodesResponse"/>
+	</wsdl:message>	
+	<wsdl:message name="updateCompleteBPRecordRequest">
+		<wsdl:part name="parameters" element="ns:updateCompleteBPRecord"/>
+	</wsdl:message>
+	<wsdl:message name="updateCompleteBPRecordResponse">
+		<wsdl:part name="parameters" element="ns:updateCompleteBPRecordResponse"/>
+	</wsdl:message>
+	<wsdl:message name="createShellRequest">
+		<wsdl:part name="parameters" element="ns:createShell"/>
+	</wsdl:message>
+	<wsdl:message name="createShellResponse">
+		<wsdl:part name="parameters" element="ns:createShellResponse"/>
+	</wsdl:message>
+	
+	
+	<wsdl:message name="getSapBPListRequest">
+		<wsdl:part name="parameters" element="ns:getSapBPList"/>
+	</wsdl:message>
+	<wsdl:message name="getSapBPListResponse">
+		<wsdl:part name="parameters" element="ns:getSapBPListResponse"/>
+	</wsdl:message>
+
+	<wsdl:message name="getSapBPRecordRequest">
+		<wsdl:part name="parameters" element="ns:getSapBPRecord"/>
+	</wsdl:message>
+	<wsdl:message name="getSapBPRecordResponse">
+		<wsdl:part name="parameters" element="ns:getSapBPRecordResponse"/>
+	</wsdl:message>
+	<wsdl:message name="createAssetRequest">
+		<wsdl:part name="parameters" element="ns:createAsset"/>
+	</wsdl:message>
+	<wsdl:message name="createAssetResponse">
+		<wsdl:part name="parameters" element="ns:createAssetResponse"/>
+	</wsdl:message>
+	<wsdl:message name="createCompleteBPRecordRequest">
+		<wsdl:part name="parameters" element="ns:createCompleteBPRecord"/>
+	</wsdl:message>
+	<wsdl:message name="createCompleteBPRecordResponse">
+		<wsdl:part name="parameters" element="ns:createCompleteBPRecordResponse"/>
+	</wsdl:message>
+	<wsdl:message name="createSapBPRecordRequest">
+		<wsdl:part name="parameters" element="ns:createSapBPRecord"/>
+	</wsdl:message>
+	<wsdl:message name="createSapBPRecordResponse">
+		<wsdl:part name="parameters" element="ns:createSapBPRecordResponse"/>
+	</wsdl:message>
+	<wsdl:message name="createScheduleActivitiesRequest">
+		<wsdl:part name="parameters" element="ns:createScheduleActivities"/>
+	</wsdl:message>
+	<wsdl:message name="createScheduleActivitiesResponse">
+		<wsdl:part name="parameters" element="ns:createScheduleActivitiesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="getUDRDataRequest">
+		<wsdl:part name="parameters" element="ns:getUDRData"/>
+	</wsdl:message>
+	<wsdl:message name="getUDRDataResponse">
+		<wsdl:part name="parameters" element="ns:getUDRDataResponse"/>
+	</wsdl:message>
+	<wsdl:message name="getBPRecordRequest">
+		<wsdl:part name="parameters" element="ns:getBPRecord"/>
+	</wsdl:message>
+	<wsdl:message name="getBPRecordResponse">
+		<wsdl:part name="parameters" element="ns:getBPRecordResponse"/>
+	</wsdl:message>
+	<wsdl:message name="getScheduleActivitiesRequest">
+		<wsdl:part name="parameters" element="ns:getScheduleActivities"/>
+	</wsdl:message>
+	<wsdl:message name="getScheduleActivitiesResponse">
+		<wsdl:part name="parameters" element="ns:getScheduleActivitiesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="getCompleteBPRecordRequest">
+		<wsdl:part name="parameters" element="ns:getCompleteBPRecord"/>
+	</wsdl:message>
+	<wsdl:message name="getCompleteBPRecordResponse">
+		<wsdl:part name="parameters" element="ns:getCompleteBPRecordResponse"/>
+	</wsdl:message>
+	<wsdl:message name="updateConfigurableModuleRecordRequest">
+		<wsdl:part name="parameters" element="ns:updateConfigurableModuleRecord"/>
+	</wsdl:message>
+	<wsdl:message name="updateConfigurableModuleRecordResponse">
+		<wsdl:part name="parameters" element="ns:updateConfigurableModuleRecordResponse"/>
+	</wsdl:message>
+	<wsdl:message name="createFundingStructureRequest">
+		<wsdl:part name="parameters" element="ns:createFundingStructure"/>
+	</wsdl:message>
+	<wsdl:message name="createFundingStructureResponse">
+		<wsdl:part name="parameters" element="ns:createFundingStructureResponse"/>
+	</wsdl:message>
+
+	<wsdl:message name="updateExchangeRatesRequest">
+		<wsdl:part name="parameters" element="ns:updateExchangeRates"/>
+	</wsdl:message>
+	<wsdl:message name="updateExchangeRatesResponse">
+		<wsdl:part name="parameters" element="ns:updateExchangeRatesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="getExchangeRatesRequest">
+		<wsdl:part name="parameters" element="ns:getExchangeRates"/>
+	</wsdl:message>
+	<wsdl:message name="getExchangeRatesResponse">
+		<wsdl:part name="parameters" element="ns:getExchangeRatesResponse"/>
+	</wsdl:message>
+	<wsdl:portType name="UnifierWebServicesPortType">
+		<wsdl:operation name="createUpdateResource">
+			<wsdl:input message="ns:createUpdateResourceRequest" wsaw:Action="urn:createUpdateResource"/>
+			<wsdl:output message="ns:createUpdateResourceResponse" wsaw:Action="urn:createUpdateResourceResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getProjectShellList">
+			<wsdl:input message="ns:getProjectShellListRequest" wsaw:Action="urn:getProjectShellList"/>
+			<wsdl:output message="ns:getProjectShellListResponse" wsaw:Action="urn:getProjectShellListResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getScheduleSheetDataMaps">
+			<wsdl:input message="ns:getScheduleSheetDataMapsRequest" wsaw:Action="urn:getScheduleSheetDataMaps"/>
+			<wsdl:output message="ns:getScheduleSheetDataMapsResponse" wsaw:Action="urn:getScheduleSheetDataMapsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getScheduleSheetList">
+			<wsdl:input message="ns:getScheduleSheetListRequest" wsaw:Action="urn:getScheduleSheetList"/>
+			<wsdl:output message="ns:getScheduleSheetListResponse" wsaw:Action="urn:getScheduleSheetListResponse"/>
+		</wsdl:operation>		
+		<wsdl:operation name="updateUserGroupMembership">
+			<wsdl:input message="ns:updateUserGroupMembershipRequest" wsaw:Action="urn:updateUserGroupMembership"/>
+			<wsdl:output message="ns:updateUserGroupMembershipResponse" wsaw:Action="urn:updateUserGroupMembershipResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="updateUserShellMembership">
+			<wsdl:input message="ns:updateUserShellMembershipRequest" wsaw:Action="urn:updateUserShellMembership"/>
+			<wsdl:output message="ns:updateUserShellMembershipResponse" wsaw:Action="urn:updateUserShellMembershipResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="updateScheduleActivitiesFromFileV2">
+			<wsdl:input message="ns:updateScheduleActivitiesFromFileV2Request" wsaw:Action="urn:updateScheduleActivitiesFromFileV2"/>
+			<wsdl:output message="ns:updateScheduleActivitiesFromFileV2Response" wsaw:Action="urn:updateScheduleActivitiesFromFileV2Response"/>
+		</wsdl:operation>
+		<wsdl:operation name="createScheduleActivitiesFromFileV2">
+			<wsdl:input message="ns:createScheduleActivitiesFromFileV2Request" wsaw:Action="urn:createScheduleActivitiesFromFileV2"/>
+			<wsdl:output message="ns:createScheduleActivitiesFromFileV2Response" wsaw:Action="urn:createScheduleActivitiesFromFileV2Response"/>
+		</wsdl:operation>	
+		<wsdl:operation name="updateBPRecordV2">
+			<wsdl:input message="ns:updateBPRecordV2Request" wsaw:Action="urn:updateBPRecordV2"/>
+			<wsdl:output message="ns:updateBPRecordV2Response" wsaw:Action="urn:updateBPRecordV2Response"/>
+		</wsdl:operation>		
+		<wsdl:operation name="getTransactionStatus">
+			<wsdl:input message="ns:getTransactionStatusRequest" wsaw:Action="urn:getTransactionStatus"/>
+			<wsdl:output message="ns:getTransactionStatusResponse" wsaw:Action="urn:getTransactionStatusResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getSOV">
+			<wsdl:input message="ns:getSOVRequest" wsaw:Action="urn:getSOV"/>
+			<wsdl:output message="ns:getSOVResponse" wsaw:Action="urn:getSOVResponse"/>
+		</wsdl:operation>
+
+		<wsdl:operation name="getRoleList">
+			<wsdl:input message="ns:getRoleListRequest" wsaw:Action="urn:getRoleList"/>
+			<wsdl:output message="ns:getRoleListResponse" wsaw:Action="urn:getRoleListResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getResourceList">
+			<wsdl:input message="ns:getResourceListRequest" wsaw:Action="urn:getResourceList"/>
+			<wsdl:output message="ns:getResourceListResponse" wsaw:Action="urn:getResourceListResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getPlanningItem">
+			<wsdl:input message="ns:getPlanningItemRequest" wsaw:Action="urn:getPlanningItem"/>
+			<wsdl:output message="ns:getPlanningItemResponse" wsaw:Action="urn:getPlanningItemResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="updateUser">
+			<wsdl:input message="ns:updateUserRequest" wsaw:Action="urn:updateUser"/>
+			<wsdl:output message="ns:updateUserResponse" wsaw:Action="urn:updateUserResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getUserList">
+			<wsdl:input message="ns:getUserListRequest" wsaw:Action="urn:getUserList"/>
+			<wsdl:output message="ns:getUserListResponse" wsaw:Action="urn:getUserListResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="createUser">
+			<wsdl:input message="ns:createUserRequest" wsaw:Action="urn:createUser"/>
+			<wsdl:output message="ns:createUserResponse" wsaw:Action="urn:createUserResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="createUpdateRole">
+			<wsdl:input message="ns:createUpdateRoleRequest" wsaw:Action="urn:createUpdateRole"/>
+			<wsdl:output message="ns:createUpdateRoleResponse" wsaw:Action="urn:createUpdateRoleResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getSpaceList">
+			<wsdl:input message="ns:getSpaceListRequest" wsaw:Action="urn:getSpaceList"/>
+			<wsdl:output message="ns:getSpaceListResponse" wsaw:Action="urn:getSpaceListResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getLevelList">
+			<wsdl:input message="ns:getLevelListRequest" wsaw:Action="urn:getLevelList"/>
+			<wsdl:output message="ns:getLevelListResponse" wsaw:Action="urn:getLevelListResponse"/>
+		</wsdl:operation>
+
+		<wsdl:operation name="updateSpace">
+			<wsdl:input message="ns:updateSpaceRequest" wsaw:Action="urn:updateSpace"/>
+			<wsdl:output message="ns:updateSpaceResponse" wsaw:Action="urn:updateSpaceResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="createSpace">
+			<wsdl:input message="ns:createSpaceRequest" wsaw:Action="urn:createSpace"/>
+			<wsdl:output message="ns:createSpaceResponse" wsaw:Action="urn:createSpaceResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="updateLevel">
+			<wsdl:input message="ns:updateLevelRequest" wsaw:Action="urn:updateLevel"/>
+			<wsdl:output message="ns:updateLevelResponse" wsaw:Action="urn:updateLevelResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="createLevel">
+			<wsdl:input message="ns:createLevelRequest" wsaw:Action="urn:createLevel"/>
+			<wsdl:output message="ns:createLevelResponse" wsaw:Action="urn:createLevelResponse"/>
+		</wsdl:operation>
+
+		<wsdl:operation name="updateShell">
+			<wsdl:input message="ns:updateShellRequest" wsaw:Action="urn:updateShell"/>
+			<wsdl:output message="ns:updateShellResponse" wsaw:Action="urn:updateShellResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="Ping">
+			<wsdl:input message="ns:PingRequest" wsaw:Action="urn:Ping"/>
+			<wsdl:output message="ns:PingResponse" wsaw:Action="urn:PingResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="updateBPRecord">
+			<wsdl:input message="ns:updateBPRecordRequest" wsaw:Action="urn:updateBPRecord"/>
+			<wsdl:output message="ns:updateBPRecordResponse" wsaw:Action="urn:updateBPRecordResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="createBPRecord">
+			<wsdl:input message="ns:createBPRecordRequest" wsaw:Action="urn:createBPRecord"/>
+			<wsdl:output message="ns:createBPRecordResponse" wsaw:Action="urn:createBPRecordResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="updateScheduleActivities">
+			<wsdl:input message="ns:updateScheduleActivitiesRequest" wsaw:Action="urn:updateScheduleActivities"/>
+			<wsdl:output message="ns:updateScheduleActivitiesResponse" wsaw:Action="urn:updateScheduleActivitiesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="updateScheduleActivitiesV2">
+			<wsdl:input message="ns:updateScheduleActivitiesV2Request" wsaw:Action="urn:updateScheduleActivitiesV2"/>
+			<wsdl:output message="ns:updateScheduleActivitiesV2Response" wsaw:Action="urn:updateScheduleActivitiesV2Response"/>
+		</wsdl:operation>
+		<wsdl:operation name="createScheduleActivitiesV2">
+			<wsdl:input message="ns:createScheduleActivitiesV2Request" wsaw:Action="urn:createScheduleActivitiesV2"/>
+			<wsdl:output message="ns:createScheduleActivitiesV2Response" wsaw:Action="urn:createScheduleActivitiesV2Response"/>
+		</wsdl:operation>		
+		<wsdl:operation name="updateColumnData">
+			<wsdl:input message="ns:updateColumnDataRequest" wsaw:Action="urn:updateColumnData"/>
+			<wsdl:output message="ns:updateColumnDataResponse" wsaw:Action="urn:updateColumnDataResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="addCompleteBPLineItem">
+			<wsdl:input message="ns:addCompleteBPLineItemRequest" wsaw:Action="urn:addCompleteBPLineItem"/>
+			<wsdl:output message="ns:addCompleteBPLineItemResponse" wsaw:Action="urn:addCompleteBPLineItemResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getShellList">
+			<wsdl:input message="ns:getShellListRequest" wsaw:Action="urn:getShellList"/>
+			<wsdl:output message="ns:getShellListResponse" wsaw:Action="urn:getShellListResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="createWBS">
+			<wsdl:input message="ns:createWBSRequest" wsaw:Action="urn:createWBS"/>
+			<wsdl:output message="ns:createWBSResponse" wsaw:Action="urn:createWBSResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="updateWBS">
+			<wsdl:input message="ns:updateWBSRequest" wsaw:Action="urn:updateWBS"/>
+			<wsdl:output message="ns:updateWBSResponse" wsaw:Action="urn:updateWBSResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="sortCostSheet">
+			<wsdl:input message="ns:sortCostSheetRequest" wsaw:Action="urn:sortCostSheet"/>
+			<wsdl:output message="ns:sortCostSheetResponse" wsaw:Action="urn:sortCostSheetResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="createProject">
+			<wsdl:input message="ns:createProjectRequest" wsaw:Action="urn:createProject"/>
+			<wsdl:output message="ns:createProjectResponse" wsaw:Action="urn:createProjectResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getColumnData">
+			<wsdl:input message="ns:getColumnDataRequest" wsaw:Action="urn:getColumnData"/>
+			<wsdl:output message="ns:getColumnDataResponse" wsaw:Action="urn:getColumnDataResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getBPList">
+			<wsdl:input message="ns:getBPListRequest" wsaw:Action="urn:getBPList"/>
+			<wsdl:output message="ns:getBPListResponse" wsaw:Action="urn:getBPListResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="createConfigurableModuleRecord">
+			<wsdl:input message="ns:createConfigurableModuleRecordRequest" wsaw:Action="urn:createConfigurableModuleRecord"/>
+			<wsdl:output message="ns:createConfigurableModuleRecordResponse" wsaw:Action="urn:createConfigurableModuleRecordResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="updateSapBPRecord">
+			<wsdl:input message="ns:updateSapBPRecordRequest" wsaw:Action="urn:updateSapBPRecord"/>
+			<wsdl:output message="ns:updateSapBPRecordResponse" wsaw:Action="urn:updateSapBPRecordResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="addBPLineItem">
+			<wsdl:input message="ns:addBPLineItemRequest" wsaw:Action="urn:addBPLineItem"/>
+			<wsdl:output message="ns:addBPLineItemResponse" wsaw:Action="urn:addBPLineItemResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getWBSStructure">
+			<wsdl:input message="ns:getWBSStructureRequest" wsaw:Action="urn:getWBSStructure"/>
+			<wsdl:output message="ns:getWBSStructureResponse" wsaw:Action="urn:getWBSStructureResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getWBSCodes">
+			<wsdl:input message="ns:getWBSCodesRequest" wsaw:Action="urn:getWBSCodes"/>
+			<wsdl:output message="ns:getWBSCodesResponse" wsaw:Action="urn:getWBSCodesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="updateCompleteBPRecord">
+			<wsdl:input message="ns:updateCompleteBPRecordRequest" wsaw:Action="urn:updateCompleteBPRecord"/>
+			<wsdl:output message="ns:updateCompleteBPRecordResponse" wsaw:Action="urn:updateCompleteBPRecordResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="createShell">
+			<wsdl:input message="ns:createShellRequest" wsaw:Action="urn:createShell"/>
+			<wsdl:output message="ns:createShellResponse" wsaw:Action="urn:createShellResponse"/>
+		</wsdl:operation>
+	
+		<wsdl:operation name="getSapBPList">
+			<wsdl:input message="ns:getSapBPListRequest" wsaw:Action="urn:getSapBPList"/>
+			<wsdl:output message="ns:getSapBPListResponse" wsaw:Action="urn:getSapBPListResponse"/>
+		</wsdl:operation>
+
+		<wsdl:operation name="getSapBPRecord">
+			<wsdl:input message="ns:getSapBPRecordRequest" wsaw:Action="urn:getSapBPRecord"/>
+			<wsdl:output message="ns:getSapBPRecordResponse" wsaw:Action="urn:getSapBPRecordResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="createAsset">
+			<wsdl:input message="ns:createAssetRequest" wsaw:Action="urn:createAsset"/>
+			<wsdl:output message="ns:createAssetResponse" wsaw:Action="urn:createAssetResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="createCompleteBPRecord">
+			<wsdl:input message="ns:createCompleteBPRecordRequest" wsaw:Action="urn:createCompleteBPRecord"/>
+			<wsdl:output message="ns:createCompleteBPRecordResponse" wsaw:Action="urn:createCompleteBPRecordResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="createSapBPRecord">
+			<wsdl:input message="ns:createSapBPRecordRequest" wsaw:Action="urn:createSapBPRecord"/>
+			<wsdl:output message="ns:createSapBPRecordResponse" wsaw:Action="urn:createSapBPRecordResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="createScheduleActivities">
+			<wsdl:input message="ns:createScheduleActivitiesRequest" wsaw:Action="urn:createScheduleActivities"/>
+			<wsdl:output message="ns:createScheduleActivitiesResponse" wsaw:Action="urn:createScheduleActivitiesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getUDRData">
+			<wsdl:input message="ns:getUDRDataRequest" wsaw:Action="urn:getUDRData"/>
+			<wsdl:output message="ns:getUDRDataResponse" wsaw:Action="urn:getUDRDataResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getBPRecord">
+			<wsdl:input message="ns:getBPRecordRequest" wsaw:Action="urn:getBPRecord"/>
+			<wsdl:output message="ns:getBPRecordResponse" wsaw:Action="urn:getBPRecordResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getScheduleActivities">
+			<wsdl:input message="ns:getScheduleActivitiesRequest" wsaw:Action="urn:getScheduleActivities"/>
+			<wsdl:output message="ns:getScheduleActivitiesResponse" wsaw:Action="urn:getScheduleActivitiesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getCompleteBPRecord">
+			<wsdl:input message="ns:getCompleteBPRecordRequest" wsaw:Action="urn:getCompleteBPRecord"/>
+			<wsdl:output message="ns:getCompleteBPRecordResponse" wsaw:Action="urn:getCompleteBPRecordResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="updateConfigurableModuleRecord">
+			<wsdl:input message="ns:updateConfigurableModuleRecordRequest" wsaw:Action="urn:updateConfigurableModuleRecord"/>
+			<wsdl:output message="ns:updateConfigurableModuleRecordResponse" wsaw:Action="urn:updateConfigurableModuleRecordResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="createFundingStructure">
+			<wsdl:input message="ns:createFundingStructureRequest" wsaw:Action="urn:createFundingStructure"/>
+			<wsdl:output message="ns:createFundingStructureResponse" wsaw:Action="urn:createFundingStructureResponse"/>
+		</wsdl:operation>
+
+		<wsdl:operation name="updateExchangeRates">
+			<wsdl:input message="ns:updateExchangeRatesRequest" wsaw:Action="urn:updateExchangeRates"/>
+			<wsdl:output message="ns:updateExchangeRatesResponse" wsaw:Action="urn:updateExchangeRatesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getExchangeRates">
+			<wsdl:input message="ns:getExchangeRatesRequest" wsaw:Action="urn:getExchangeRates"/>
+			<wsdl:output message="ns:getExchangeRatesResponse" wsaw:Action="urn:getExchangeRatesResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="UnifierWebServicesoap11Binding" type="ns:UnifierWebServicesPortType">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="updateSpace">
+			<soap:operation soapAction="urn:updateSpace" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createSpace">
+			<soap:operation soapAction="urn:createSpace" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateLevel">
+			<soap:operation soapAction="urn:updateLevel" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createUpdateResource">
+			<soap:operation soapAction="urn:createUpdateResource" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getProjectShellList">
+			<soap:operation soapAction="urn:getProjectShellList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getScheduleSheetDataMaps">
+			<soap:operation soapAction="urn:getScheduleSheetDataMaps" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getScheduleSheetList">
+			<soap:operation soapAction="urn:getScheduleSheetList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>		
+		<wsdl:operation name="updateUserGroupMembership">
+			<soap:operation soapAction="urn:updateUserGroupMembership" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateUserShellMembership">
+			<soap:operation soapAction="urn:updateUserShellMembership" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateScheduleActivitiesFromFileV2">
+			<soap:operation soapAction="urn:updateScheduleActivitiesFromFileV2" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createScheduleActivitiesFromFileV2">
+			<soap:operation soapAction="urn:createScheduleActivitiesFromFileV2" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateBPRecordV2">
+			<soap:operation soapAction="urn:updateBPRecordV2" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>		 
+		<wsdl:operation name="getTransactionStatus">
+			<soap:operation soapAction="urn:getTransactionStatus" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getSOV">
+			<soap:operation soapAction="urn:getSOV" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getRoleList">
+			<soap:operation soapAction="urn:getRoleList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getResourceList">
+			<soap:operation soapAction="urn:getResourceList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getPlanningItem">
+			<soap:operation soapAction="urn:getPlanningItem" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateUser">
+			<soap:operation soapAction="urn:updateUser" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getUserList">
+			<soap:operation soapAction="urn:getUserList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createUser">
+			<soap:operation soapAction="urn:createUser" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createUpdateRole">
+			<soap:operation soapAction="urn:createUpdateRole" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getSpaceList">
+			<soap:operation soapAction="urn:getSpaceList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getLevelList">
+			<soap:operation soapAction="urn:getLevelList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createLevel">
+			<soap:operation soapAction="urn:createLevel" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="updateShell">
+			<soap:operation soapAction="urn:updateShell" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateBPRecord">
+			<soap:operation soapAction="urn:updateBPRecord" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createBPRecord">
+			<soap:operation soapAction="urn:createBPRecord" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="Ping">
+			<soap:operation soapAction="urn:Ping" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateScheduleActivities">
+			<soap:operation soapAction="urn:updateScheduleActivities" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateScheduleActivitiesV2">
+			<soap:operation soapAction="urn:updateScheduleActivitiesV2" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createScheduleActivitiesV2">
+			<soap:operation soapAction="urn:createScheduleActivitiesV2" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>		
+		<wsdl:operation name="updateColumnData">
+			<soap:operation soapAction="urn:updateColumnData" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getShellList">
+			<soap:operation soapAction="urn:getShellList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="addCompleteBPLineItem">
+			<soap:operation soapAction="urn:addCompleteBPLineItem" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createProject">
+			<soap:operation soapAction="urn:createProject" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createWBS">
+			<soap:operation soapAction="urn:createWBS" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateWBS">
+			<soap:operation soapAction="urn:updateWBS" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="sortCostSheet">
+			<soap:operation soapAction="urn:sortCostSheet" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getBPList">
+			<soap:operation soapAction="urn:getBPList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getColumnData">
+			<soap:operation soapAction="urn:getColumnData" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateSapBPRecord">
+			<soap:operation soapAction="urn:updateSapBPRecord" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createConfigurableModuleRecord">
+			<soap:operation soapAction="urn:createConfigurableModuleRecord" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="addBPLineItem">
+			<soap:operation soapAction="urn:addBPLineItem" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getWBSStructure">
+			<soap:operation soapAction="urn:getWBSStructure" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getWBSCodes">
+			<soap:operation soapAction="urn:getWBSCodes" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateCompleteBPRecord">
+			<soap:operation soapAction="urn:updateCompleteBPRecord" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="createShell">
+			<soap:operation soapAction="urn:createShell" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getSapBPList">
+			<soap:operation soapAction="urn:getSapBPList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getSapBPRecord">
+			<soap:operation soapAction="urn:getSapBPRecord" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="createAsset">
+			<soap:operation soapAction="urn:createAsset" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createCompleteBPRecord">
+			<soap:operation soapAction="urn:createCompleteBPRecord" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createSapBPRecord">
+			<soap:operation soapAction="urn:createSapBPRecord" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createScheduleActivities">
+			<soap:operation soapAction="urn:createScheduleActivities" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getUDRData">
+			<soap:operation soapAction="urn:getUDRData" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getBPRecord">
+			<soap:operation soapAction="urn:getBPRecord" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getScheduleActivities">
+			<soap:operation soapAction="urn:getScheduleActivities" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateConfigurableModuleRecord">
+			<soap:operation soapAction="urn:updateConfigurableModuleRecord" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getCompleteBPRecord">
+			<soap:operation soapAction="urn:getCompleteBPRecord" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createFundingStructure">
+			<soap:operation soapAction="urn:createFundingStructure" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="updateExchangeRates">
+			<soap:operation soapAction="urn:updateExchangeRates" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getExchangeRates">
+			<soap:operation soapAction="urn:getExchangeRates" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="UnifierWebServicesoap12Binding" type="ns:UnifierWebServicesPortType">
+		<soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="updateSpace">
+			<soap:operation soapAction="urn:updateSpace" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createSpace">
+			<soap:operation soapAction="urn:createSpace" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createUpdateResource">
+			<soap:operation soapAction="urn:createUpdateResource" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getProjectShellList">
+			<soap:operation soapAction="urn:getProjectShellList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getScheduleSheetDataMaps">
+			<soap:operation soapAction="urn:getScheduleSheetDataMaps" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getScheduleSheetList">
+			<soap:operation soapAction="urn:getScheduleSheetList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>		
+		<wsdl:operation name="updateUserGroupMembership">
+			<soap:operation soapAction="urn:updateUserGroupMembership" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateUserShellMembership">
+			<soap:operation soapAction="urn:updateUserShellMembership" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateScheduleActivitiesFromFileV2">
+			<soap:operation soapAction="urn:updateScheduleActivitiesFromFileV2" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createScheduleActivitiesFromFileV2">
+			<soap:operation soapAction="urn:createScheduleActivitiesFromFileV2" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateBPRecordV2">
+			<soap:operation soapAction="urn:updateBPRecordV2" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>		
+		<wsdl:operation name="getTransactionStatus">
+			<soap:operation soapAction="urn:getTransactionStatus" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getSOV">
+			<soap:operation soapAction="urn:getSOV" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getRoleList">
+			<soap:operation soapAction="urn:getRoleList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getResourceList">
+			<soap:operation soapAction="urn:getResourceList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getPlanningItem">
+			<soap:operation soapAction="urn:getPlanningItem" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateUser">
+			<soap:operation soapAction="urn:updateUser" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getUserList">
+			<soap:operation soapAction="urn:getUserList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createUser">
+			<soap:operation soapAction="urn:createUser" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createUpdateRole">
+			<soap:operation soapAction="urn:createUpdateRole" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getSpaceList">
+			<soap:operation soapAction="urn:getSpaceList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getLevelList">
+			<soap:operation soapAction="urn:getLevelList" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateLevel">
+			<soap:operation soapAction="urn:updateLevel" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createLevel">
+			<soap:operation soapAction="urn:createLevel" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="updateShell">
+			<soap12:operation soapAction="urn:updateShell" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateBPRecord">
+			<soap12:operation soapAction="urn:updateBPRecord" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createBPRecord">
+			<soap12:operation soapAction="urn:createBPRecord" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="Ping">
+			<soap12:operation soapAction="urn:Ping" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateScheduleActivities">
+			<soap12:operation soapAction="urn:updateScheduleActivities" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateScheduleActivitiesV2">
+			<soap12:operation soapAction="urn:updateScheduleActivitiesV2" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="createScheduleActivitiesV2">
+			<soap12:operation soapAction="urn:createScheduleActivitiesV2" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>		
+		<wsdl:operation name="updateColumnData">
+			<soap12:operation soapAction="urn:updateColumnData" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getShellList">
+			<soap12:operation soapAction="urn:getShellList" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="addCompleteBPLineItem">
+			<soap12:operation soapAction="urn:addCompleteBPLineItem" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createProject">
+			<soap12:operation soapAction="urn:createProject" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createWBS">
+			<soap12:operation soapAction="urn:createWBS" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateWBS">
+			<soap12:operation soapAction="urn:updateWBS" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="sortCostSheet">
+			<soap12:operation soapAction="urn:sortCostSheet" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getBPList">
+			<soap12:operation soapAction="urn:getBPList" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getColumnData">
+			<soap12:operation soapAction="urn:getColumnData" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateSapBPRecord">
+			<soap12:operation soapAction="urn:updateSapBPRecord" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createConfigurableModuleRecord">
+			<soap12:operation soapAction="urn:createConfigurableModuleRecord" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="addBPLineItem">
+			<soap12:operation soapAction="urn:addBPLineItem" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getWBSStructure">
+			<soap12:operation soapAction="urn:getWBSStructure" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getWBSCodes">
+			<soap12:operation soapAction="urn:getWBSCodes" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateCompleteBPRecord">
+			<soap12:operation soapAction="urn:updateCompleteBPRecord" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="createShell">
+			<soap12:operation soapAction="urn:createShell" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getSapBPList">
+			<soap12:operation soapAction="urn:getSapBPList" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getSapBPRecord">
+			<soap12:operation soapAction="urn:getSapBPRecord" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="createAsset">
+			<soap12:operation soapAction="urn:createAsset" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createCompleteBPRecord">
+			<soap12:operation soapAction="urn:createCompleteBPRecord" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createSapBPRecord">
+			<soap12:operation soapAction="urn:createSapBPRecord" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createScheduleActivities">
+			<soap12:operation soapAction="urn:createScheduleActivities" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getUDRData">
+			<soap12:operation soapAction="urn:getUDRData" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getBPRecord">
+			<soap12:operation soapAction="urn:getBPRecord" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getScheduleActivities">
+			<soap12:operation soapAction="urn:getScheduleActivities" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateConfigurableModuleRecord">
+			<soap12:operation soapAction="urn:updateConfigurableModuleRecord" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getCompleteBPRecord">
+			<soap12:operation soapAction="urn:getCompleteBPRecord" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createFundingStructure">
+			<soap12:operation soapAction="urn:createFundingStructure" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="updateExchangeRates">
+			<soap12:operation soapAction="urn:updateExchangeRates" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getExchangeRates">
+			<soap12:operation soapAction="urn:getExchangeRates" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="UnifierWebServicesHttpBinding" type="ns:UnifierWebServicesPortType">
+		<http:binding verb="POST"/>
+		<wsdl:operation name="updateSpace">
+			<http:operation location="UnifierWebServices/updateSpace"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateSpace"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateSpace"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createSpace">
+			<http:operation location="UnifierWebServices/createSpace"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createSpace"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createSpace"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getSOV">
+			<http:operation location="UnifierWebServices/getSOV"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getSOV"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getSOV"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createUpdateResource">
+			<http:operation location="UnifierWebServices/createUpdateResource"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createUpdateResource"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createUpdateResource"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getProjectShellList">
+			<http:operation location="UnifierWebServices/getProjectShellList"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getProjectShellList"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getProjectShellList"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getScheduleSheetDataMaps">
+			<http:operation location="UnifierWebServices/getScheduleSheetDataMaps"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getScheduleSheetDataMaps"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getScheduleSheetDataMaps"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getScheduleSheetList">
+			<http:operation location="UnifierWebServices/getScheduleSheetList"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getScheduleSheetList"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getScheduleSheetList"/>
+			</wsdl:output>
+		</wsdl:operation>		
+		<wsdl:operation name="updateUserGroupMembership">
+			<http:operation location="UnifierWebServices/updateUserGroupMembership"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateUserGroupMembership"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateUserGroupMembership"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateUserShellMembership">
+			<http:operation location="UnifierWebServices/updateUserShellMembership"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateUserShellMembership"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateUserShellMembership"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateScheduleActivitiesFromFileV2">
+			<http:operation location="UnifierWebServices/updateScheduleActivitiesFromFileV2"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateScheduleActivitiesFromFileV2"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateScheduleActivitiesFromFileV2"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createScheduleActivitiesFromFileV2">
+			<http:operation location="UnifierWebServices/createScheduleActivitiesFromFileV2"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createScheduleActivitiesFromFileV2"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createScheduleActivitiesFromFileV2"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateBPRecordV2">
+			<http:operation location="UnifierWebServices/updateBPRecordV2"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateBPRecordV2"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateBPRecordV2"/>
+			</wsdl:output>
+		</wsdl:operation>	
+		<wsdl:operation name="getTransactionStatus">
+			<http:operation location="UnifierWebServices/getTransactionStatus"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getTransactionStatus"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getTransactionStatus"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getRoleList">
+			<http:operation location="UnifierWebServices/getRoleList"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getRoleList"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getRoleList"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getResourceList">
+			<http:operation location="UnifierWebServices/getResourceList"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getResourceList"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getResourceList"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getPlanningItem">
+			<http:operation location="UnifierWebServices/getPlanningItem"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getPlanningItem"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getPlanningItem"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateUser">
+			<http:operation location="UnifierWebServices/updateUser"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateUser"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateUser"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getUserList">
+			<http:operation location="UnifierWebServices/getUserList"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getUserList"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getUserList"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createUser">
+			<http:operation location="UnifierWebServices/createUser"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createUser"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createUser"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createUpdateRole">
+			<http:operation location="UnifierWebServices/createUpdateRole"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createUpdateRole"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createUpdateRole"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getSpaceList">
+			<http:operation location="UnifierWebServices/getSpaceList"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getSpaceList"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getSpaceList"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getLevelList">
+			<http:operation location="UnifierWebServices/getLevelList"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getLevelList"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getLevelList"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateLevel">
+			<http:operation location="UnifierWebServices/updateLevel"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateLevel"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateLevel"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createLevel">
+			<http:operation location="UnifierWebServices/createLevel"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createLevel"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createLevel"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+
+
+
+		<wsdl:operation name="updateShell">
+			<http:operation location="UnifierWebServices/updateShell"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateShell"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateShell"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateBPRecord">
+			<http:operation location="UnifierWebServices/updateBPRecord"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateBPRecord"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateBPRecord"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createBPRecord">
+			<http:operation location="UnifierWebServices/createBPRecord"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createBPRecord"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createBPRecord"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="Ping">
+			<http:operation location="UnifierWebServices/Ping"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="Ping"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="Ping"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateScheduleActivities">
+			<http:operation location="UnifierWebServices/updateScheduleActivities"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateScheduleActivities"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateScheduleActivities"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateScheduleActivitiesV2">
+			<http:operation location="UnifierWebServices/updateScheduleActivitiesV2"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateScheduleActivitiesV2"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateScheduleActivitiesV2"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="createScheduleActivitiesV2">
+			<http:operation location="UnifierWebServices/createScheduleActivitiesV2"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createScheduleActivitiesV2"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createScheduleActivitiesV2"/>
+			</wsdl:output>
+		</wsdl:operation>		
+		<wsdl:operation name="updateColumnData">
+			<http:operation location="UnifierWebServices/updateColumnData"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateColumnData"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateColumnData"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getShellList">
+			<http:operation location="UnifierWebServices/getShellList"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getShellList"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getShellList"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="addCompleteBPLineItem">
+			<http:operation location="UnifierWebServices/addCompleteBPLineItem"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="addCompleteBPLineItem"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="addCompleteBPLineItem"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createProject">
+			<http:operation location="UnifierWebServices/createProject"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createProject"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createProject"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createWBS">
+			<http:operation location="UnifierWebServices/createWBS"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createWBS"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createWBS"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateWBS">
+			<http:operation location="UnifierWebServices/updateWBS"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateWBS"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateWBS"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="sortCostSheet">
+			<http:operation location="UnifierWebServices/sortCostSheet"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="sortCostSheet"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="sortCostSheet"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getBPList">
+			<http:operation location="UnifierWebServices/getBPList"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getBPList"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getBPList"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getColumnData">
+			<http:operation location="UnifierWebServices/getColumnData"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getColumnData"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getColumnData"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateSapBPRecord">
+			<http:operation location="UnifierWebServices/updateSapBPRecord"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateSapBPRecord"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateSapBPRecord"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createConfigurableModuleRecord">
+			<http:operation location="UnifierWebServices/createConfigurableModuleRecord"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createConfigurableModuleRecord"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createConfigurableModuleRecord"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="addBPLineItem">
+			<http:operation location="UnifierWebServices/addBPLineItem"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="addBPLineItem"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="addBPLineItem"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getWBSStructure">
+			<http:operation location="UnifierWebServices/getWBSStructure"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getWBSStructure"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getWBSStructure"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getWBSCodes">
+			<http:operation location="UnifierWebServices/getWBSCodes"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getWBSCodes"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getWBSCodes"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateCompleteBPRecord">
+			<http:operation location="UnifierWebServices/updateCompleteBPRecord"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateCompleteBPRecord"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateCompleteBPRecord"/>
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="createShell">
+			<http:operation location="UnifierWebServices/createShell"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createShell"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createShell"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getSapBPList">
+			<http:operation location="UnifierWebServices/getSapBPList"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getSapBPList"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getSapBPList"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getSapBPRecord">
+			<http:operation location="UnifierWebServices/getSapBPRecord"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getSapBPRecord"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getSapBPRecord"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="createAsset">
+			<http:operation location="UnifierWebServices/createAsset"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createAsset"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createAsset"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createCompleteBPRecord">
+			<http:operation location="UnifierWebServices/createCompleteBPRecord"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createCompleteBPRecord"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createCompleteBPRecord"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createSapBPRecord">
+			<http:operation location="UnifierWebServices/createSapBPRecord"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createSapBPRecord"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createSapBPRecord"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createScheduleActivities">
+			<http:operation location="UnifierWebServices/createScheduleActivities"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createScheduleActivities"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createScheduleActivities"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getUDRData">
+			<http:operation location="UnifierWebServices/getUDRData"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getUDRData"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getUDRData"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getBPRecord">
+			<http:operation location="UnifierWebServices/getBPRecord"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getBPRecord"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getBPRecord"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getScheduleActivities">
+			<http:operation location="UnifierWebServices/getScheduleActivities"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getScheduleActivities"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getScheduleActivities"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateConfigurableModuleRecord">
+			<http:operation location="UnifierWebServices/updateConfigurableModuleRecord"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateConfigurableModuleRecord"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateConfigurableModuleRecord"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getCompleteBPRecord">
+			<http:operation location="UnifierWebServices/getCompleteBPRecord"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getCompleteBPRecord"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getCompleteBPRecord"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createFundingStructure">
+			<http:operation location="UnifierWebServices/createFundingStructure"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="createFundingStructure"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="createFundingStructure"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="updateExchangeRates">
+			<http:operation location="UnifierWebServices/updateExchangeRates"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="updateExchangeRates"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="updateExchangeRates"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getExchangeRates">
+			<http:operation location="UnifierWebServices/getExchangeRates"/>
+			<wsdl:input>
+				<mime:content type="text/xml" part="getExchangeRates"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="getExchangeRates"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="UnifierWebServices">
+		<wsdl:port name="UnifierWebServicesHttpSoap11Endpoint" binding="ns:UnifierWebServicesoap11Binding">
+			<soap:address location="*** Your URL Here ***/ws/un/services/UnifierWebServices"/>
+		</wsdl:port>
+		<wsdl:port name="UnifierWebServicesHttpSoap12Endpoint" binding="ns:UnifierWebServicesoap12Binding">
+			<soap12:address location="*** Your URL Here ***/ws/un/services/UnifierWebServices"/>
+		</wsdl:port>
+		<wsdl:port name="UnifierWebServicesHttpEndpoint" binding="ns:UnifierWebServicesHttpBinding">
+			<http:address location="*** Your URL Here ***/ws/un/services/UnifierWebServices"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

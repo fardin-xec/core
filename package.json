@@ -1,0 +1,34 @@
+{
+  "name": "@ashghal-apms/core",
+  "version": "0.0.0",
+  "description": "Integration core and common files as standardization",
+  "author": "Vimalraj Arumugam <vimalraj.a@gaeaglobal.com>",
+  "homepage": "",
+  "license": "UNLICENSED",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@ashghal-apms/core": "file:",
+    "axios": "^0.19.2",
+    "dotenv": "^6.2.0",
+    "fast-xml-parser": "^3.16.0",
+    "he": "^1.2.0",
+    "lodash": "^4.17.11",
+    "log4js": "^6.1.2",
+    "moment": "^2.24.0",
+    "soap": "^0.31.0"
+  },
+  "devDependencies": {
+    "@types/node": "10.12.18",
+    "typescript": "^3.2.2"
+  }
+}
