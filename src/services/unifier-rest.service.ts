@@ -84,4 +84,73 @@ export class UnifierRESTService {
       };
     }
   }
+
+ public async getUDRRecords(
+    udrReportName: string,
+    options: { timeout?: number } = {}
+  ): Promise<any[]> {
+    try {
+      const token = await this.getToken();
+      const rest = new REST(
+        this.baseURL,
+        {},
+        { type: 'BEARER', token },
+        { timeout: options.timeout || this.options.timeout, responseType: 'json' }
+      );
+
+      // Using the correct UDR endpoint with POST method and reportname in body
+      const resp = await rest.post('v1/data/udr/get', {
+        reportname: udrReportName
+      });
+
+      if (resp.data.status !== 200) {
+        throw new Error('Failed to fetch UDR records: ' + resp.data?.message?.toString());
+      }
+
+      // Return the data array from response
+      return resp.data.data || [];
+    } catch (e) {
+      const _e: AxiosError = e;
+      const message = _e.isAxiosError ? _e.toJSON() : _e.message;
+      throw new Error('Unifier REST API UDR fetch failed. Cause: ' + JSON.stringify(message));
+    }
+  }
+
+  public async createBPRecord<T>(
+    projectNumber: string,
+    bpName: string,
+    data: T,
+    options: { timeout?: number } = {}
+  ): Promise<any> {
+    try {
+      const token = await this.getToken();
+      const rest = new REST(
+        this.baseURL,
+        {},
+        { type: 'BEARER', token },
+        { timeout: options.timeout || this.options.timeout, responseType: 'json' }
+      );
+
+      const payload = {
+        options: { bpname: bpName },
+        data: [data]
+      };
+
+      const resp = await rest.post(`v1/bp/record/${projectNumber}`, payload);
+
+      if (resp.data.status !== 200) {
+        throw {
+          message: 'Unifier create failed. Cause: ' + resp.data?.message?.toString(),
+          data: resp.data
+        };
+      }
+
+      return resp.data;
+    } catch (e) {
+      throw {
+        message: e.message,
+        data: e.data || null
+      };
+    }
+  }
 }
