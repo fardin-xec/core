@@ -11,4 +11,10 @@ export declare class UnifierRESTService {
     updateBPRecord<T>(bp: WorkflowBPRequest<T>, options?: {
         timeout: number;
     }): Promise<any>;
+    getUDRRecords(udrReportName: string, options?: {
+        timeout?: number;
+    }): Promise<any[]>;
+    createBPRecord<T>(projectNumber: string, bpName: string, data: T, options?: {
+        timeout?: number;
+    }): Promise<any>;
 }
