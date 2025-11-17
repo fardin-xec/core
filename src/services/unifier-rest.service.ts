@@ -17,7 +17,7 @@ export class UnifierRESTService {
         this.baseURL,
         {},
         { type: 'BASIC', username: this.userName, password: this.password },
-        { timeout: this.options.timeout, responseType: 'json' }
+        { timeout: 30000, responseType: 'json' }
       );
       const resp = await rest.get('v1/login');
       if (resp.data.status === 200) {
