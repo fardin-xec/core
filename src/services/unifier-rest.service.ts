@@ -85,7 +85,7 @@ export class UnifierRESTService {
     }
   }
 
- public async getUDRRecords(
+  public async getUDRRecords(
     udrReportName: string,
     options: { timeout?: number } = {}
   ): Promise<any[]> {
@@ -151,6 +151,138 @@ export class UnifierRESTService {
         message: e.message,
         data: e.data || null
       };
+    }
+  }
+
+  /**
+   * Get BP record by record number with optional attachments
+   * @param projectNumber Project number
+   * @param bpName Business Process name
+   * @param recordNo Record number to retrieve
+   * @param includeAttachments Whether to include attachments (default: false)
+   * @param options Request options
+   * @returns BP record with optional attachments
+   */
+  public async getBPRecord(
+    projectNumber: string,
+    bpName: string,
+    recordNo: string,
+    includeAttachments: boolean = false,
+    options: { timeout?: number } = {}
+  ): Promise<any> {
+    try {
+      const token = await this.getToken();
+      const rest = new REST(
+        this.baseURL,
+        {},
+        { type: 'BEARER', token },
+        { timeout: options.timeout || this.options.timeout, responseType: 'json' }
+      );
+
+      // Build query parameters
+      const queryParams = new URLSearchParams({
+        bpname: bpName,
+        record_no: recordNo
+      });
+
+      if (includeAttachments) {
+        queryParams.append('include_attachments', 'true');
+      }
+
+      // GET request to retrieve BP record
+      const resp = await rest.get(
+        `v1/bp/record/${projectNumber}?${queryParams.toString()}`
+      );
+
+      if (resp.data.status !== 200) {
+        throw new Error('Failed to fetch BP record: ' + resp.data?.message?.toString());
+      }
+
+      const recordData = resp.data.data?.[0] || resp.data.data;
+
+      // If attachments are requested and present, fetch attachment files
+      if (includeAttachments && recordData?.attachments?.length > 0) {
+        const attachmentsWithData = await Promise.all(
+          recordData.attachments.map(async (attachment: any) => {
+            try {
+              const fileBuffer = await this.getBPAttachment(
+                projectNumber,
+                bpName,
+                recordNo,
+                attachment.id || attachment.fileName,
+                options
+              );
+
+              return {
+                fileName: attachment.fileName || attachment.name,
+                fileBuffer: fileBuffer,
+                mimeType: attachment.mimeType || attachment.contentType || 'application/octet-stream',
+                id: attachment.id,
+                size: attachment.size
+              };
+            } catch (error) {
+              console.error(`Failed to fetch attachment ${attachment.fileName}:`, error);
+              return null;
+            }
+          })
+        );
+
+        // Filter out failed attachments
+        recordData.attachments = attachmentsWithData.filter(att => att !== null);
+      }
+
+      return recordData;
+    } catch (e) {
+      const _e: AxiosError = e;
+      const message = _e.isAxiosError ? _e.toJSON() : _e.message;
+      throw new Error('Unifier REST API BP record fetch failed. Cause: ' + JSON.stringify(message));
+    }
+  }
+
+  /**
+   * Get attachment file from BP record
+   * @param projectNumber Project number
+   * @param bpName Business Process name
+   * @param recordNo Record number
+   * @param attachmentId Attachment ID or filename
+   * @param options Request options
+   * @returns Buffer containing the file data
+   */
+  public async getBPAttachment(
+    projectNumber: string,
+    bpName: string,
+    recordNo: string,
+    attachmentId: string,
+    options: { timeout?: number } = {}
+  ): Promise<Buffer> {
+    try {
+      const token = await this.getToken();
+      const rest = new REST(
+        this.baseURL,
+        {},
+        { type: 'BEARER', token },
+        {
+          timeout: options.timeout || this.options.timeout,
+          responseType: 'arraybuffer' // Important: get binary data
+        }
+      );
+
+      const queryParams = new URLSearchParams({
+        bpname: bpName,
+        record_no: recordNo,
+        attachment_id: attachmentId
+      });
+
+      const resp = await rest.get(
+        `v1/bp/record/${projectNumber}/attachment?${queryParams.toString()}`
+      );
+
+      // Return the binary data as Buffer
+      return Buffer.from(resp.data);
+    } catch (e) {
+      const _e: AxiosError = e;
+      const message = _e.isAxiosError ? _e.toJSON() : _e.message;
+      throw new Error('Unifier REST API attachment fetch failed. Cause: ' + JSON.stringify(message));
     }
   }
 }
