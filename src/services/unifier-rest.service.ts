@@ -177,11 +177,18 @@ export class UnifierRESTService {
         { timeout: options.timeout || this.options.timeout, responseType: 'json' }
       );
 
-      // Format matching: v1/bp/record/{projectNumber}?input={"bpname":"BP_Name","record_no":"Record_NO"}
-      const inputParam = JSON.stringify({
+      // Build input parameter with optional include_attachments flag
+      const inputObj: any = {
         bpname: bpName,
         record_no: recordNo
-      });
+      };
+
+      // Try adding include_attachments parameter
+      if (includeAttachments) {
+        inputObj.include_attachments = true;
+      }
+
+      const inputParam = JSON.stringify(inputObj);
 
       // GET request to retrieve BP record
       const resp = await rest.get(
@@ -194,35 +201,49 @@ export class UnifierRESTService {
 
       const recordData = resp.data.data?.[0] || resp.data.data;
 
-      // If attachments are requested and present, fetch attachment files
-      if (includeAttachments && recordData?.attachments?.length > 0) {
-        const attachmentsWithData = await Promise.all(
-          recordData.attachments.map(async (attachment: any) => {
-            try {
-              const fileBuffer = await this.getBPAttachment(
-                projectNumber,
-                bpName,
-                recordNo,
-                attachment.id || attachment.fileName,
-                options
-              );
+      // If attachments are requested but not in response, try to fetch them separately
+      if (includeAttachments) {
+        try {
+          const attachmentsList = await this.getBPAttachmentsList(
+            projectNumber,
+            bpName,
+            recordNo,
+            options
+          );
 
-              return {
-                fileName: attachment.fileName || attachment.name,
-                fileBuffer: fileBuffer,
-                mimeType: attachment.mimeType || attachment.contentType || 'application/octet-stream',
-                id: attachment.id,
-                size: attachment.size
-              };
-            } catch (error) {
-              console.error(`Failed to fetch attachment ${attachment.fileName}:`, error);
-              return null;
-            }
-          })
-        );
+          if (attachmentsList && attachmentsList.length > 0) {
+            const attachmentsWithData = await Promise.all(
+              attachmentsList.map(async (attachment: any) => {
+                try {
+                  const fileBuffer = await this.getBPAttachment(
+                    projectNumber,
+                    bpName,
+                    recordNo,
+                    attachment.id || attachment.attachment_id || attachment.fileName,
+                    options
+                  );
 
-        // Filter out failed attachments
-        recordData.attachments = attachmentsWithData.filter(att => att !== null);
+                  return {
+                    fileName: attachment.fileName || attachment.file_name || attachment.name,
+                    fileBuffer: fileBuffer,
+                    mimeType: attachment.mimeType || attachment.mime_type || attachment.contentType || 'application/octet-stream',
+                    id: attachment.id || attachment.attachment_id,
+                    size: attachment.size || attachment.file_size
+                  };
+                } catch (error) {
+                  console.error(`Failed to fetch attachment ${attachment.fileName || attachment.file_name}:`, error);
+                  return null;
+                }
+              })
+            );
+
+            // Add attachments to record data
+            recordData.attachments = attachmentsWithData.filter(att => att !== null);
+          }
+        } catch (error) {
+          console.warn('Could not fetch attachments list:', error);
+          recordData.attachments = [];
+        }
       }
 
       return recordData;
@@ -230,6 +251,51 @@ export class UnifierRESTService {
       const _e: AxiosError = e;
       const message = _e.isAxiosError ? _e.toJSON() : _e.message;
       throw new Error('Unifier REST API BP record fetch failed. Cause: ' + JSON.stringify(message));
+    }
+  }
+
+  /**
+   * Get list of attachments for a BP record
+   * @param projectNumber Project number
+   * @param bpName Business Process name
+   * @param recordNo Record number
+   * @param options Request options
+   * @returns Array of attachment metadata
+   */
+  public async getBPAttachmentsList(
+    projectNumber: string,
+    bpName: string,
+    recordNo: string,
+    options: { timeout?: number } = {}
+  ): Promise<any[]> {
+    try {
+      const token = await this.getToken();
+      const rest = new REST(
+        this.baseURL,
+        {},
+        { type: 'BEARER', token },
+        { timeout: options.timeout || this.options.timeout, responseType: 'json' }
+      );
+
+      const inputParam = JSON.stringify({
+        bpname: bpName,
+        record_no: recordNo
+      });
+
+      // Try to get attachments list
+      const resp = await rest.get(
+        `v1/bp/record/${projectNumber}/attachments?input=${encodeURIComponent(inputParam)}`
+      );
+
+      if (resp.data.status === 200) {
+        return resp.data.data || [];
+      }
+
+      return [];
+    } catch (e) {
+      // If endpoint doesn't exist, return empty array
+      console.warn('Attachments list endpoint may not be available');
+      return [];
     }
   }
 

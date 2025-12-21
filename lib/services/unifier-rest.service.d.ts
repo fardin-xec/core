@@ -31,6 +31,17 @@ export declare class UnifierRESTService {
         timeout?: number;
     }): Promise<any>;
     /**
+     * Get list of attachments for a BP record
+     * @param projectNumber Project number
+     * @param bpName Business Process name
+     * @param recordNo Record number
+     * @param options Request options
+     * @returns Array of attachment metadata
+     */
+    getBPAttachmentsList(projectNumber: string, bpName: string, recordNo: string, options?: {
+        timeout?: number;
+    }): Promise<any[]>;
+    /**
      * Get attachment file from BP record
      * @param projectNumber Project number
      * @param bpName Business Process name
