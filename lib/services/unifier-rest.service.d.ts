@@ -31,6 +31,10 @@ export declare class UnifierRESTService {
         timeout?: number;
     }): Promise<any>;
     /**
+     * Helper method to determine MIME type from file name
+     */
+    private getMimeTypeFromFileName;
+    /**
      * Get list of attachments for a BP record
      * @param projectNumber Project number
      * @param bpName Business Process name
@@ -44,13 +48,13 @@ export declare class UnifierRESTService {
     /**
      * Get attachment file from BP record
      * @param projectNumber Project number
-     * @param bpName Business Process name
-     * @param recordNo Record number
-     * @param attachmentId Attachment ID or filename
+     * @param bpName Business Process name (optional, can be null)
+     * @param recordNo Record number (optional, can be null)
+     * @param fileId File ID to download
      * @param options Request options
      * @returns Buffer containing the file data
      */
-    getBPAttachment(projectNumber: string, bpName: string, recordNo: string, attachmentId: string, options?: {
+    getBPAttachment(projectNumber: string, bpName: string | null, recordNo: string | null, fileId: string | number, options?: {
         timeout?: number;
     }): Promise<Buffer>;
 }

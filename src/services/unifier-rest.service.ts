@@ -177,18 +177,11 @@ export class UnifierRESTService {
         { timeout: options.timeout || this.options.timeout, responseType: 'json' }
       );
 
-      // Build input parameter with optional include_attachments flag
-      const inputObj: any = {
+      // Build input parameter
+      const inputParam = JSON.stringify({
         bpname: bpName,
         record_no: recordNo
-      };
-
-      // Try adding include_attachments parameter
-      if (includeAttachments) {
-        inputObj.include_attachments = true;
-      }
-
-      const inputParam = JSON.stringify(inputObj);
+      });
 
       // GET request to retrieve BP record
       const resp = await rest.get(
@@ -201,7 +194,7 @@ export class UnifierRESTService {
 
       const recordData = resp.data.data?.[0] || resp.data.data;
 
-      // If attachments are requested but not in response, try to fetch them separately
+      // If attachments are requested, fetch them separately
       if (includeAttachments) {
         try {
           const attachmentsList = await this.getBPAttachmentsList(
@@ -219,19 +212,24 @@ export class UnifierRESTService {
                     projectNumber,
                     bpName,
                     recordNo,
-                    attachment.id || attachment.attachment_id || attachment.fileName,
+                    attachment.file_id,
                     options
                   );
 
                   return {
-                    fileName: attachment.fileName || attachment.file_name || attachment.name,
+                    fileName: attachment.file_name,
                     fileBuffer: fileBuffer,
-                    mimeType: attachment.mimeType || attachment.mime_type || attachment.contentType || 'application/octet-stream',
-                    id: attachment.id || attachment.attachment_id,
-                    size: attachment.size || attachment.file_size
+                    mimeType: this.getMimeTypeFromFileName(attachment.file_name),
+                    fileId: attachment.file_id,
+                    fileSize: attachment.file_size,
+                    revisionNo: attachment.revision_no,
+                    publicationNo: attachment.publication_no,
+                    title: attachment.title,
+                    issueDate: attachment.issue_date,
+                    tabName: attachment.tab_name
                   };
                 } catch (error) {
-                  console.error(`Failed to fetch attachment ${attachment.fileName || attachment.file_name}:`, error);
+                  console.error(`Failed to fetch attachment ${attachment.file_name}:`, error);
                   return null;
                 }
               })
@@ -239,6 +237,8 @@ export class UnifierRESTService {
 
             // Add attachments to record data
             recordData.attachments = attachmentsWithData.filter(att => att !== null);
+          } else {
+            recordData.attachments = [];
           }
         } catch (error) {
           console.warn('Could not fetch attachments list:', error);
@@ -252,6 +252,29 @@ export class UnifierRESTService {
       const message = _e.isAxiosError ? _e.toJSON() : _e.message;
       throw new Error('Unifier REST API BP record fetch failed. Cause: ' + JSON.stringify(message));
     }
+  }
+
+  /**
+   * Helper method to determine MIME type from file name
+   */
+  private getMimeTypeFromFileName(fileName: string): string {
+    const extension = fileName.split('.').pop()?.toLowerCase();
+    const mimeTypes: { [key: string]: string } = {
+      'pdf': 'application/pdf',
+      'doc': 'application/msword',
+      'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'xls': 'application/vnd.ms-excel',
+      'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'png': 'image/png',
+      'jpg': 'image/jpeg',
+      'jpeg': 'image/jpeg',
+      'gif': 'image/gif',
+      'txt': 'text/plain',
+      'csv': 'text/csv',
+      'zip': 'application/zip',
+      'rar': 'application/x-rar-compressed'
+    };
+    return mimeTypes[extension || ''] || 'application/octet-stream';
   }
 
   /**
@@ -282,37 +305,39 @@ export class UnifierRESTService {
         record_no: recordNo
       });
 
-      // Try to get attachments list
+      // Correct endpoint: v1/bp/record/file/list/{projectNumber}
       const resp = await rest.get(
-        `v1/bp/record/${projectNumber}/attachments?input=${encodeURIComponent(inputParam)}`
+        `v1/bp/record/file/list/${projectNumber}?input=${encodeURIComponent(inputParam)}`
       );
 
-      if (resp.data.status === 200) {
-        return resp.data.data || [];
+      if (resp.data.status === 200 && resp.data.data && resp.data.data.length > 0) {
+        // Extract attachments from the response
+        const recordData = resp.data.data[0];
+        return recordData.attachments || [];
       }
 
       return [];
     } catch (e) {
-      // If endpoint doesn't exist, return empty array
-      console.warn('Attachments list endpoint may not be available');
-      return [];
+      const _e: AxiosError = e;
+      const message = _e.isAxiosError ? _e.toJSON() : _e.message;
+      throw new Error('Unifier REST API attachments list fetch failed. Cause: ' + JSON.stringify(message));
     }
   }
 
   /**
    * Get attachment file from BP record
    * @param projectNumber Project number
-   * @param bpName Business Process name
-   * @param recordNo Record number
-   * @param attachmentId Attachment ID or filename
+   * @param bpName Business Process name (optional, can be null)
+   * @param recordNo Record number (optional, can be null)
+   * @param fileId File ID to download
    * @param options Request options
    * @returns Buffer containing the file data
    */
   public async getBPAttachment(
     projectNumber: string,
-    bpName: string,
-    recordNo: string,
-    attachmentId: string,
+    bpName: string | null,
+    recordNo: string | null,
+    fileId: string | number,
     options: { timeout?: number } = {}
   ): Promise<Buffer> {
     try {
@@ -327,21 +352,14 @@ export class UnifierRESTService {
         }
       );
 
-      const inputParam = JSON.stringify({
-        bpname: bpName,
-        record_no: recordNo,
-        attachment_id: attachmentId
-      });
-
-      const resp = await rest.get(
-        `v1/bp/record/${projectNumber}/attachment?input=${encodeURIComponent(inputParam)}`
-      );
+      // Correct endpoint: v1/bp/record/download/file/{file_id}
+      const resp = await rest.get(`v1/bp/record/download/file/${fileId}`);
 
       return Buffer.from(resp.data);
     } catch (e) {
       const _e: AxiosError = e;
       const message = _e.isAxiosError ? _e.toJSON() : _e.message;
-      throw new Error('Unifier REST API attachment fetch failed. Cause: ' + JSON.stringify(message));
+      throw new Error('Unifier REST API attachment download failed. Cause: ' + JSON.stringify(message));
     }
   }
 }
