@@ -98,7 +98,6 @@ export class UnifierRESTService {
         { timeout: options.timeout || this.options.timeout, responseType: 'json' }
       );
 
-      // Using the correct UDR endpoint with POST method and reportname in body
       const resp = await rest.post('v1/data/udr/get', {
         reportname: udrReportName
       });
@@ -107,7 +106,6 @@ export class UnifierRESTService {
         throw new Error('Failed to fetch UDR records: ' + resp.data?.message?.toString());
       }
 
-      // Return the data array from response
       return resp.data.data || [];
     } catch (e) {
       const _e: AxiosError = e;
@@ -179,19 +177,15 @@ export class UnifierRESTService {
         { timeout: options.timeout || this.options.timeout, responseType: 'json' }
       );
 
-      // Build query parameters
-      const queryParams = new URLSearchParams({
+      // Format matching: v1/bp/record/{projectNumber}?input={"bpname":"BP_Name","record_no":"Record_NO"}
+      const inputParam = JSON.stringify({
         bpname: bpName,
         record_no: recordNo
       });
 
-      if (includeAttachments) {
-        queryParams.append('include_attachments', 'true');
-      }
-
       // GET request to retrieve BP record
       const resp = await rest.get(
-        `v1/bp/record/${projectNumber}?${queryParams.toString()}`
+        `v1/bp/record/${projectNumber}?input=${encodeURIComponent(inputParam)}`
       );
 
       if (resp.data.status !== 200) {
@@ -263,21 +257,20 @@ export class UnifierRESTService {
         { type: 'BEARER', token },
         {
           timeout: options.timeout || this.options.timeout,
-          responseType: 'arraybuffer' // Important: get binary data
+          responseType: 'arraybuffer'
         }
       );
 
-      const queryParams = new URLSearchParams({
+      const inputParam = JSON.stringify({
         bpname: bpName,
         record_no: recordNo,
         attachment_id: attachmentId
       });
 
       const resp = await rest.get(
-        `v1/bp/record/${projectNumber}/attachment?${queryParams.toString()}`
+        `v1/bp/record/${projectNumber}/attachment?input=${encodeURIComponent(inputParam)}`
       );
 
-      // Return the binary data as Buffer
       return Buffer.from(resp.data);
     } catch (e) {
       const _e: AxiosError = e;
