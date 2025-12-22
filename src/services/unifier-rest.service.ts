@@ -2,7 +2,7 @@ import { WorkflowBPRequest } from '../model/bp-request.model';
 import { isEmpty, isArray } from 'lodash/lang';
 import { REST } from './rest.service';
 import { AxiosError } from 'axios';
-import { gunzipSync } from 'zlib';
+import AdmZip from 'adm-zip';
 
 export class UnifierRESTService {
   constructor(
@@ -155,6 +155,12 @@ export class UnifierRESTService {
 
   /**
    * Get BP record by record number with optional attachments
+   * @param projectNumber Project number
+   * @param bpName Business Process name
+   * @param recordNo Record number to retrieve
+   * @param includeAttachments Whether to include attachments (default: false)
+   * @param options Request options
+   * @returns BP record with optional attachments
    */
   public async getBPRecord(
     projectNumber: string,
@@ -172,11 +178,13 @@ export class UnifierRESTService {
         { timeout: options.timeout || this.options.timeout, responseType: 'json' }
       );
 
+      // Build input parameter
       const inputParam = JSON.stringify({
         bpname: bpName,
         record_no: recordNo
       });
 
+      // GET request to retrieve BP record
       const resp = await rest.get(
         `v1/bp/record/${projectNumber}?input=${encodeURIComponent(inputParam)}`
       );
@@ -187,6 +195,7 @@ export class UnifierRESTService {
 
       const recordData = resp.data.data?.[0] || resp.data.data;
 
+      // If attachments are requested, fetch them separately
       if (includeAttachments) {
         try {
           const attachmentsList = await this.getBPAttachmentsList(
@@ -197,13 +206,9 @@ export class UnifierRESTService {
           );
 
           if (attachmentsList && attachmentsList.length > 0) {
-            console.log(`Fetching ${attachmentsList.length} attachment file(s)...`);
-
             const attachmentsWithData = await Promise.all(
               attachmentsList.map(async (attachment: any) => {
                 try {
-                  console.log(`Downloading: ${attachment.file_name} (ID: ${attachment.file_id})`);
-
                   const fileBuffer = await this.getBPAttachment(
                     projectNumber,
                     bpName,
@@ -212,25 +217,12 @@ export class UnifierRESTService {
                     options
                   );
 
-                  // Verify buffer integrity
-                  if (!Buffer.isBuffer(fileBuffer)) {
-                    console.error(`Invalid buffer returned for ${attachment.file_name}`);
-                    return null;
-                  }
-
-                  if (fileBuffer.length === 0) {
-                    console.error(`Empty buffer returned for ${attachment.file_name}`);
-                    return null;
-                  }
-
-                  console.log(`✓ Downloaded: ${attachment.file_name} (${fileBuffer.length} bytes)`);
-
                   return {
                     fileName: attachment.file_name,
                     fileBuffer: fileBuffer,
                     mimeType: this.getMimeTypeFromFileName(attachment.file_name),
                     fileId: attachment.file_id,
-                    fileSize: attachment.file_size || fileBuffer.length,
+                    fileSize: attachment.file_size,
                     revisionNo: attachment.revision_no,
                     publicationNo: attachment.publication_no,
                     title: attachment.title,
@@ -238,14 +230,14 @@ export class UnifierRESTService {
                     tabName: attachment.tab_name
                   };
                 } catch (error) {
-                  console.error(`Failed to fetch attachment ${attachment.file_name}:`, error.message);
+                  console.error(`Failed to fetch attachment ${attachment.file_name}:`, error);
                   return null;
                 }
               })
             );
 
+            // Add attachments to record data
             recordData.attachments = attachmentsWithData.filter(att => att !== null);
-            console.log(`Successfully prepared ${recordData.attachments.length} attachment(s)`);
           } else {
             recordData.attachments = [];
           }
@@ -281,16 +273,18 @@ export class UnifierRESTService {
       'txt': 'text/plain',
       'csv': 'text/csv',
       'zip': 'application/zip',
-      'rar': 'application/x-rar-compressed',
-      'dwg': 'application/acad',
-      'dxf': 'application/dxf',
-      'msg': 'application/vnd.ms-outlook'
+      'rar': 'application/x-rar-compressed'
     };
     return mimeTypes[extension || ''] || 'application/octet-stream';
   }
 
   /**
    * Get list of attachments for a BP record
+   * @param projectNumber Project number
+   * @param bpName Business Process name
+   * @param recordNo Record number
+   * @param options Request options
+   * @returns Array of attachment metadata
    */
   public async getBPAttachmentsList(
     projectNumber: string,
@@ -312,11 +306,13 @@ export class UnifierRESTService {
         record_no: recordNo
       });
 
+      // Correct endpoint: v1/bp/record/file/list/{projectNumber}
       const resp = await rest.get(
         `v1/bp/record/file/list/${projectNumber}?input=${encodeURIComponent(inputParam)}`
       );
 
       if (resp.data.status === 200 && resp.data.data && resp.data.data.length > 0) {
+        // Extract attachments from the response
         const recordData = resp.data.data[0];
         return recordData.attachments || [];
       }
@@ -330,89 +326,140 @@ export class UnifierRESTService {
   }
 
   /**
-   * Get attachment file from BP record
-   * CRITICAL: This must return a proper Buffer for binary file data
+   * Get attachment file from BP record and automatically unzip if it's a zip file
+   * @param projectNumber Project number
+   * @param bpName Business Process name (optional, can be null)
+   * @param recordNo Record number (optional, can be null)
+   * @param fileId File ID to download
+   * @param options Request options
+   * @returns Buffer containing the unzipped file data (first file in zip) or original file if not zipped
    */
   public async getBPAttachment(
-  projectNumber: string,
-  bpName: string | null,
-  recordNo: string | null,
-  fileId: string | number,
-  options: { timeout?: number } = {}
-): Promise<Buffer> {
-  try {
-    const token = await this.getToken();
+    projectNumber: string,
+    bpName: string | null,
+    recordNo: string | null,
+    fileId: string | number,
+    options: { timeout?: number } = {}
+  ): Promise<Buffer> {
+    try {
+      const token = await this.getToken();
+      const rest = new REST(
+        this.baseURL,
+        {},
+        { type: 'BEARER', token },
+        {
+          timeout: options.timeout || this.options.timeout,
+          responseType: 'arraybuffer'
+        }
+      );
 
-    const rest = new REST(
-      this.baseURL,
-      {},
-      { type: 'BEARER', token },
-      {
-        timeout: options.timeout || this.options.timeout,
-        responseType: 'arraybuffer'
+      // Correct endpoint: v1/bp/record/download/file/{file_id}
+      const resp = await rest.get(`v1/bp/record/download/file/${fileId}`);
+
+      const buffer = Buffer.from(resp.data);
+
+      // Check if the file is a zip file by checking the magic number
+      // ZIP files start with 'PK' (0x504B)
+      const isZipFile = buffer.length >= 2 && buffer[0] === 0x50 && buffer[1] === 0x4B;
+
+      if (isZipFile) {
+        try {
+          const zip = new AdmZip(buffer);
+          const zipEntries = zip.getEntries();
+
+          if (zipEntries.length === 0) {
+            throw new Error('ZIP file is empty');
+          }
+
+          // Return the first file in the zip
+          // If you need a specific file, you can modify this logic
+          const firstEntry = zipEntries[0];
+
+          if (firstEntry.isDirectory) {
+            // If first entry is a directory, find the first file
+            const firstFile = zipEntries.find(entry => !entry.isDirectory);
+            if (!firstFile) {
+              throw new Error('No files found in ZIP archive');
+            }
+            return firstFile.getData();
+          }
+
+          return firstEntry.getData();
+        } catch (zipError) {
+          console.error('Error unzipping file:', zipError);
+          throw new Error('Failed to unzip file: ' + zipError.message);
+        }
       }
-    );
 
-    console.log(fileId);
-    console.log("++++++++++++++++++++++++");
-    const resp = await rest.get(`v1/bp/record/download/file/${fileId}`);
-
-    if (!resp.data) {
-      throw new Error('No data received from server');
+      // If not a zip file, return the original buffer
+      return buffer;
+    } catch (e) {
+      const _e: AxiosError = e;
+      const message = _e.isAxiosError ? _e.toJSON() : _e.message;
+      throw new Error('Unifier REST API attachment download failed. Cause: ' + JSON.stringify(message));
     }
-
-    // Check if response is gzipped
-    const contentEncoding = resp.headers['content-encoding'];
-    const contentLength = parseInt(resp.headers['content-length'] || '0');
-
-    console.log('Download response:');
-    console.log('  Content-Encoding:', contentEncoding);
-    console.log('  Content-Length:', contentLength);
-    console.log('  Data received:', resp.data.byteLength || resp.data.length);
-
-    // Convert response to Buffer
-    let buffer: Buffer;
-
-    if (Buffer.isBuffer(resp.data)) {
-      buffer = resp.data;
-    } else if (resp.data instanceof ArrayBuffer) {
-      buffer = Buffer.from(resp.data);
-    } else if (ArrayBuffer.isView(resp.data)) {
-      buffer = Buffer.from(resp.data.buffer, resp.data.byteOffset, resp.data.byteLength);
-    } else {
-      throw new Error('Unexpected response data type');
-    }
-
-    // MANUAL DECOMPRESSION: If content is gzipped, decompress it
-    if (contentEncoding === 'gzip' || contentEncoding === 'deflate') {
-      console.log(`Manually decompressing ${contentEncoding} content...`);
-      try {
-        buffer = gunzipSync(buffer);
-        console.log(`Decompressed: ${buffer.length} bytes`);
-      } catch (decompressError) {
-        console.error('Decompression failed:', decompressError.message);
-        throw new Error(`Failed to decompress file: ${decompressError.message}`);
-      }
-    }
-
-    // Verify buffer
-    if (!Buffer.isBuffer(buffer)) {
-      throw new Error('Failed to create Buffer from response');
-    }
-
-    if (buffer.length === 0) {
-      throw new Error('Received empty buffer from server');
-    }
-
-    // Log final buffer info
-    console.log(`Final buffer: ${buffer.length} bytes, header: ${buffer.slice(0, 16).toString('hex')}`);
-
-    return buffer;
-
-  } catch (e) {
-    const _e: any = e;
-    const message = _e.isAxiosError ? JSON.stringify(_e.toJSON()) : _e.message;
-    throw new Error('Unifier REST API attachment download failed. Cause: ' + message);
   }
-}
+
+  /**
+   * Get all files from a zipped attachment
+   * @param projectNumber Project number
+   * @param bpName Business Process name (optional, can be null)
+   * @param recordNo Record number (optional, can be null)
+   * @param fileId File ID to download
+   * @param options Request options
+   * @returns Array of objects containing file names and buffers
+   */
+  public async getBPAttachmentAllFiles(
+    projectNumber: string,
+    bpName: string | null,
+    recordNo: string | null,
+    fileId: string | number,
+    options: { timeout?: number } = {}
+  ): Promise<Array<{ fileName: string; fileBuffer: Buffer; isDirectory: boolean }>> {
+    try {
+      const token = await this.getToken();
+      const rest = new REST(
+        this.baseURL,
+        {},
+        { type: 'BEARER', token },
+        {
+          timeout: options.timeout || this.options.timeout,
+          responseType: 'arraybuffer'
+        }
+      );
+
+      const resp = await rest.get(`v1/bp/record/download/file/${fileId}`);
+      const buffer = Buffer.from(resp.data);
+
+      // Check if the file is a zip file
+      const isZipFile = buffer.length >= 2 && buffer[0] === 0x50 && buffer[1] === 0x4B;
+
+      if (isZipFile) {
+        try {
+          const zip = new AdmZip(buffer);
+          const zipEntries = zip.getEntries();
+
+          return zipEntries.map(entry => ({
+            fileName: entry.entryName,
+            fileBuffer: entry.isDirectory ? Buffer.alloc(0) : entry.getData(),
+            isDirectory: entry.isDirectory
+          }));
+        } catch (zipError) {
+          console.error('Error unzipping file:', zipError);
+          throw new Error('Failed to unzip file: ' + zipError.message);
+        }
+      }
+
+      // If not a zip file, return as single file
+      return [{
+        fileName: 'file',
+        fileBuffer: buffer,
+        isDirectory: false
+      }];
+    } catch (e) {
+      const _e: AxiosError = e;
+      const message = _e.isAxiosError ? _e.toJSON() : _e.message;
+      throw new Error('Unifier REST API attachment download failed. Cause: ' + JSON.stringify(message));
+    }
+  }
 }
