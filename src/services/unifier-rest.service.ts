@@ -353,6 +353,8 @@ export class UnifierRESTService {
       }
     );
 
+    console.log(fileId);
+    console.log("++++++++++++++++++++++++");
     const resp = await rest.get(`v1/bp/record/download/file/${fileId}`);
 
     if (!resp.data) {
