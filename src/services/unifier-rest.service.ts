@@ -2,6 +2,7 @@ import { WorkflowBPRequest } from '../model/bp-request.model';
 import { isEmpty, isArray } from 'lodash/lang';
 import { REST } from './rest.service';
 import { AxiosError } from 'axios';
+import { gunzipSync } from 'zlib';
 
 export class UnifierRESTService {
   constructor(
@@ -333,86 +334,83 @@ export class UnifierRESTService {
    * CRITICAL: This must return a proper Buffer for binary file data
    */
   public async getBPAttachment(
-    projectNumber: string,
-    bpName: string | null,
-    recordNo: string | null,
-    fileId: string | number,
-    options: { timeout?: number } = {}
-  ): Promise<Buffer> {
-    try {
-      const token = await this.getToken();
+  projectNumber: string,
+  bpName: string | null,
+  recordNo: string | null,
+  fileId: string | number,
+  options: { timeout?: number } = {}
+): Promise<Buffer> {
+  try {
+    const token = await this.getToken();
 
-      // CRITICAL: Use 'arraybuffer' response type for binary data
-      const rest = new REST(
-        this.baseURL,
-        {},
-        { type: 'BEARER', token },
-        {
-          timeout: options.timeout || this.options.timeout,
-          responseType: 'arraybuffer' // This is crucial for binary data
-        }
-      );
-
-      const resp = await rest.get(`v1/bp/record/download/file/${fileId}`);
-
-      // Verify response data exists
-      if (!resp.data) {
-        throw new Error('No data received from server');
+    const rest = new REST(
+      this.baseURL,
+      {},
+      { type: 'BEARER', token },
+      {
+        timeout: options.timeout || this.options.timeout,
+        responseType: 'arraybuffer'
       }
+    );
 
-      // Convert response to Buffer
-      // The response should be an ArrayBuffer when responseType is 'arraybuffer'
-      let buffer: Buffer;
+    const resp = await rest.get(`v1/bp/record/download/file/${fileId}`);
 
-      if (Buffer.isBuffer(resp.data)) {
-        // Already a Buffer
-        buffer = resp.data;
-      } else if (resp.data instanceof ArrayBuffer) {
-        // Convert ArrayBuffer to Buffer
-        buffer = Buffer.from(resp.data);
-      } else if (typeof resp.data === 'string') {
-        // If somehow we got a string (base64 or otherwise), handle it
-        console.warn('Received string data instead of ArrayBuffer - this may indicate an API issue');
-        // Try to decode as base64 first
-        try {
-          buffer = Buffer.from(resp.data, 'base64');
-        } catch (e) {
-          // If that fails, treat as binary string
-          buffer = Buffer.from(resp.data, 'binary');
-        }
-      } else if (resp.data && typeof resp.data === 'object') {
-        // Handle various object formats
-        if (resp.data.type === 'Buffer' && Array.isArray(resp.data.data)) {
-          // JSON-serialized Buffer
-          buffer = Buffer.from(resp.data.data);
-        } else if (ArrayBuffer.isView(resp.data)) {
-          // TypedArray (Uint8Array, etc.)
-          buffer = Buffer.from(resp.data.buffer, resp.data.byteOffset, resp.data.byteLength);
-        } else {
-          throw new Error('Unexpected data format: ' + JSON.stringify(Object.keys(resp.data)));
-        }
-      } else {
-        throw new Error('Unknown response data type: ' + typeof resp.data);
-      }
-
-      // Verify buffer is valid
-      if (!Buffer.isBuffer(buffer)) {
-        throw new Error('Failed to create Buffer from response');
-      }
-
-      if (buffer.length === 0) {
-        throw new Error('Received empty buffer from server');
-      }
-
-      // Log buffer details for debugging
-      console.log(`Buffer created: ${buffer.length} bytes, header: ${buffer.slice(0, 16).toString('hex')}`);
-
-      return buffer;
-
-    } catch (e) {
-      const _e: AxiosError = e;
-      const message = _e.isAxiosError ? _e.toJSON() : _e.message;
-      throw new Error('Unifier REST API attachment download failed. Cause: ' + JSON.stringify(message));
+    if (!resp.data) {
+      throw new Error('No data received from server');
     }
+
+    // Check if response is gzipped
+    const contentEncoding = resp.headers['content-encoding'];
+    const contentLength = parseInt(resp.headers['content-length'] || '0');
+
+    console.log('Download response:');
+    console.log('  Content-Encoding:', contentEncoding);
+    console.log('  Content-Length:', contentLength);
+    console.log('  Data received:', resp.data.byteLength || resp.data.length);
+
+    // Convert response to Buffer
+    let buffer: Buffer;
+
+    if (Buffer.isBuffer(resp.data)) {
+      buffer = resp.data;
+    } else if (resp.data instanceof ArrayBuffer) {
+      buffer = Buffer.from(resp.data);
+    } else if (ArrayBuffer.isView(resp.data)) {
+      buffer = Buffer.from(resp.data.buffer, resp.data.byteOffset, resp.data.byteLength);
+    } else {
+      throw new Error('Unexpected response data type');
+    }
+
+    // MANUAL DECOMPRESSION: If content is gzipped, decompress it
+    if (contentEncoding === 'gzip' || contentEncoding === 'deflate') {
+      console.log(`Manually decompressing ${contentEncoding} content...`);
+      try {
+        buffer = gunzipSync(buffer);
+        console.log(`Decompressed: ${buffer.length} bytes`);
+      } catch (decompressError) {
+        console.error('Decompression failed:', decompressError.message);
+        throw new Error(`Failed to decompress file: ${decompressError.message}`);
+      }
+    }
+
+    // Verify buffer
+    if (!Buffer.isBuffer(buffer)) {
+      throw new Error('Failed to create Buffer from response');
+    }
+
+    if (buffer.length === 0) {
+      throw new Error('Received empty buffer from server');
+    }
+
+    // Log final buffer info
+    console.log(`Final buffer: ${buffer.length} bytes, header: ${buffer.slice(0, 16).toString('hex')}`);
+
+    return buffer;
+
+  } catch (e) {
+    const _e: any = e;
+    const message = _e.isAxiosError ? JSON.stringify(_e.toJSON()) : _e.message;
+    throw new Error('Unifier REST API attachment download failed. Cause: ' + message);
   }
+}
 }
