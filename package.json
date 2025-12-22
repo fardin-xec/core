@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@ashghal-apms/core": "file:",
+    "adm-zip": "^0.5.16",
     "axios": "^0.19.2",
     "dotenv": "^6.2.0",
     "fast-xml-parser": "^3.16.0",
