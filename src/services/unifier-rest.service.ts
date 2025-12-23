@@ -204,6 +204,7 @@ export class UnifierRESTService {
             recordNo,
             options
           );
+          console.log(attachmentsList);
 
           if (attachmentsList && attachmentsList.length > 0) {
             const attachmentsWithData = await Promise.all(
