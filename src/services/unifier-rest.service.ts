@@ -162,99 +162,99 @@ export class UnifierRESTService {
    * @param options Request options
    * @returns BP record with optional attachments
    */
+
   public async getBPRecord(
-    projectNumber: string,
-    bpName: string,
-    recordNo: string,
-    includeAttachments: boolean = false,
-    options: { timeout?: number } = {}
-  ): Promise<any> {
-    try {
-      const token = await this.getToken();
-      const rest = new REST(
-        this.baseURL,
-        {},
-        { type: 'BEARER', token },
-        { timeout: options.timeout || this.options.timeout, responseType: 'json' }
-      );
+  projectNumber: string,
+  bpName: string,
+  recordNo: string,
+  includeAttachments: boolean = false,
+  options: { timeout?: number } = {}
+): Promise<any> {
+  try {
+    const token = await this.getToken();
+    const rest = new REST(
+      this.baseURL,
+      {},
+      { type: 'BEARER', token },
+      { timeout: options.timeout || this.options.timeout, responseType: 'json' }
+    );
 
-      // Build input parameter
-      const inputParam = JSON.stringify({
-        bpname: bpName,
-        record_no: recordNo
-      });
+    const inputParam = JSON.stringify({
+      bpname: bpName,
+      record_no: recordNo
+    });
 
-      // GET request to retrieve BP record
-      const resp = await rest.get(
-        `v1/bp/record/${projectNumber}?input=${encodeURIComponent(inputParam)}`
-      );
+    const resp = await rest.get(
+      `v1/bp/record/${projectNumber}?input=${encodeURIComponent(inputParam)}`
+    );
 
-      if (resp.data.status !== 200) {
-        throw new Error('Failed to fetch BP record: ' + resp.data?.message?.toString());
-      }
+    if (resp.data.status !== 200) {
+      throw new Error('Failed to fetch BP record: ' + resp.data?.message?.toString());
+    }
 
-      const recordData = resp.data.data?.[0] || resp.data.data;
+    const recordData = resp.data.data?.[0] || resp.data.data;
 
-      // If attachments are requested, fetch them separately
-      if (includeAttachments) {
-        try {
-          const attachmentsList = await this.getBPAttachmentsList(
-            projectNumber,
-            bpName,
-            recordNo,
-            options
-          );
-          console.log(attachmentsList);
+    if (includeAttachments) {
+      try {
+        const attachmentsList = await this.getBPAttachmentsList(
+          projectNumber,
+          bpName,
+          recordNo,
+          options
+        );
+        console.log(attachmentsList);
 
-          if (attachmentsList && attachmentsList.length > 0) {
-            const attachmentsWithData = await Promise.all(
-              attachmentsList.map(async (attachment: any) => {
-                try {
-                  const fileBuffer = await this.getBPAttachment(
-                    projectNumber,
-                    bpName,
-                    recordNo,
-                    attachment.file_id,
-                    options
-                  );
+        if (attachmentsList && attachmentsList.length > 0) {
+          // Download attachments sequentially with fresh tokens for each
+          const attachmentsWithData = [];
 
-                  return {
-                    fileName: attachment.file_name,
-                    fileBuffer: fileBuffer,
-                    mimeType: this.getMimeTypeFromFileName(attachment.file_name),
-                    fileId: attachment.file_id,
-                    fileSize: attachment.file_size,
-                    revisionNo: attachment.revision_no,
-                    publicationNo: attachment.publication_no,
-                    title: attachment.title,
-                    issueDate: attachment.issue_date,
-                    tabName: attachment.tab_name
-                  };
-                } catch (error) {
-                  console.error(`Failed to fetch attachment ${attachment.file_name}:`, error);
-                  return null;
-                }
-              })
-            );
+          for (const attachment of attachmentsList) {
+            try {
+              // Each getBPAttachment call will get its own fresh token
+              const fileBuffer = await this.getBPAttachment(
+                projectNumber,
+                bpName,
+                recordNo,
+                attachment.file_id,
+                options
+              );
 
-            // Add attachments to record data
-            recordData.attachments = attachmentsWithData.filter(att => att !== null);
-          } else {
-            recordData.attachments = [];
+              attachmentsWithData.push({
+                fileName: attachment.file_name,
+                fileBuffer: fileBuffer,
+                mimeType: this.getMimeTypeFromFileName(attachment.file_name),
+                fileId: attachment.file_id,
+                fileSize: attachment.file_size,
+                revisionNo: attachment.revision_no,
+                publicationNo: attachment.publication_no,
+                title: attachment.title,
+                issueDate: attachment.issue_date,
+                tabName: attachment.tab_name
+              });
+            } catch (error) {
+              console.error(`Failed to fetch attachment ${attachment.file_name}:`, error);
+              // Continue with other attachments instead of failing completely
+            }
           }
-        } catch (error) {
-          console.warn('Could not fetch attachments list:', error);
+
+          recordData.attachments = attachmentsWithData;
+        } else {
           recordData.attachments = [];
         }
+      } catch (error) {
+        console.warn('Could not fetch attachments list:', error);
+        recordData.attachments = [];
       }
-
-      return recordData;
-    } catch (e) {
-      const _e: AxiosError = e;
-      const message = _e.isAxiosError ? _e.toJSON() : _e.message;
-      throw new Error('Unifier REST API BP record fetch failed. Cause: ' + JSON.stringify(message));
     }
+
+    return recordData;
+  } catch (e) {
+    const _e: AxiosError = e;
+    const message = _e.isAxiosError ? _e.toJSON() : _e.message;
+    throw new Error('Unifier REST API BP record fetch failed. Cause: ' + JSON.stringify(message));
   }
+}
+
 
   /**
    * Helper method to determine MIME type from file name
