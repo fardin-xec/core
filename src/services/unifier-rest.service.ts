@@ -153,6 +153,39 @@ export class UnifierRESTService {
     }
   }
 
+   public async createBPCustomeRecord<T>(
+    projectNumber: string,
+    payload: T,
+    options: { timeout?: number } = {}
+  ): Promise<any> {
+    try {
+      const token = await this.getToken();
+      const rest = new REST(
+        this.baseURL,
+        {},
+        { type: 'BEARER', token },
+        { timeout: options.timeout || this.options.timeout, responseType: 'json' }
+      );
+
+
+      const resp = await rest.post(`v1/bp/record/${projectNumber}`, payload);
+
+      if (resp.data.status !== 200) {
+        throw {
+          message: 'Unifier create failed. Cause: ' + resp.data?.message?.toString(),
+          data: resp.data
+        };
+      }
+
+      return resp.data;
+    } catch (e) {
+      throw {
+        message: e.message,
+        data: e.data || null
+      };
+    }
+  }
+
   /**
    * Get BP record by record number with optional attachments
    * @param projectNumber Project number
