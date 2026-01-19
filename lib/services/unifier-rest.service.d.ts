@@ -18,6 +18,9 @@ export declare class UnifierRESTService {
     createBPRecord<T>(projectNumber: string, bpName: string, data: T, options?: {
         timeout?: number;
     }): Promise<any>;
+    createBPCustomeRecord<T>(projectNumber: string, payload: T, options?: {
+        timeout?: number;
+    }): Promise<any>;
     /**
      * Get BP record by record number with optional attachments
      * @param projectNumber Project number
