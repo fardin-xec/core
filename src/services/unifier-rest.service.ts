@@ -14,6 +14,7 @@ export class UnifierRESTService {
 
   private async getToken() {
     try {
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
       const rest = new REST(
         this.baseURL,
         {},
@@ -55,6 +56,7 @@ export class UnifierRESTService {
       }
 
       const token = await this.getToken();
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
       const rest = new REST(
         this.baseURL,
         {},
@@ -92,6 +94,7 @@ export class UnifierRESTService {
   ): Promise<any[]> {
     try {
       const token = await this.getToken();
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
       const rest = new REST(
         this.baseURL,
         {},
@@ -123,6 +126,7 @@ export class UnifierRESTService {
   ): Promise<any> {
     try {
       const token = await this.getToken();
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
       const rest = new REST(
         this.baseURL,
         {},
@@ -160,6 +164,8 @@ export class UnifierRESTService {
   ): Promise<any> {
     try {
       const token = await this.getToken();
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
       const rest = new REST(
         this.baseURL,
         {},
@@ -205,6 +211,8 @@ export class UnifierRESTService {
 ): Promise<any> {
   try {
     const token = await this.getToken();
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
     const rest = new REST(
       this.baseURL,
       {},
@@ -328,6 +336,7 @@ export class UnifierRESTService {
   ): Promise<any[]> {
     try {
       const token = await this.getToken();
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
       const rest = new REST(
         this.baseURL,
         {},
@@ -377,6 +386,7 @@ export class UnifierRESTService {
   ): Promise<Buffer> {
     try {
       const token = await this.getToken();
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
       const rest = new REST(
         this.baseURL,
         {},
@@ -452,6 +462,7 @@ export class UnifierRESTService {
   ): Promise<Array<{ fileName: string; fileBuffer: Buffer; isDirectory: boolean }>> {
     try {
       const token = await this.getToken();
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
       const rest = new REST(
         this.baseURL,
         {},
