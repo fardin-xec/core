@@ -193,6 +193,56 @@ export class UnifierRESTService {
   }
 
   /**
+ * Update a BP record using a JSON body
+ * @param projectNumber Project number
+ * @param bpName Business Process name
+ * @param data Record data to update (must include record_no field)
+ * @param options Request options
+ * @returns Updated BP record response
+ */
+public async updateBPRecordByJSON<T extends { record_no: string }>(
+  projectNumber: string,
+  bpName: string,
+  data: T,
+  options: { timeout?: number } = {}
+): Promise<any> {
+  try {
+    const token = await this.getToken();
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+    const rest = new REST(
+      this.baseURL,
+      {},
+      { type: 'BEARER', token },
+      { timeout: options.timeout || this.options.timeout, responseType: 'json' }
+    );
+
+    const payload = {
+      options: { bpname: bpName },
+      data: [data]  // record_no is inside the data object
+    };
+
+    const resp = await rest.put(`v1/bp/record/${projectNumber}`, payload);
+
+    if (resp.data.status !== 200) {
+      throw {
+        message: 'Unifier update failed. Cause: ' + resp.data?.message?.toString(),
+        data: resp.data
+      };
+    }
+
+    return resp.data;
+  } catch (e) {
+    throw {
+      message: e.message,
+      data: e.data || null
+    };
+  }
+}
+
+
+
+  /**
    * Get BP record by record number with optional attachments
    * @param projectNumber Project number
    * @param bpName Business Process name

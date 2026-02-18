@@ -22,6 +22,19 @@ export declare class UnifierRESTService {
         timeout?: number;
     }): Promise<any>;
     /**
+   * Update a BP record using a JSON body
+   * @param projectNumber Project number
+   * @param bpName Business Process name
+   * @param data Record data to update (must include record_no field)
+   * @param options Request options
+   * @returns Updated BP record response
+   */
+    updateBPRecordByJSON<T extends {
+        record_no: string;
+    }>(projectNumber: string, bpName: string, data: T, options?: {
+        timeout?: number;
+    }): Promise<any>;
+    /**
      * Get BP record by record number with optional attachments
      * @param projectNumber Project number
      * @param bpName Business Process name
