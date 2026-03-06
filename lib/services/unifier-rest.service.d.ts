@@ -89,4 +89,22 @@ export declare class UnifierRESTService {
         fileBuffer: Buffer;
         isDirectory: boolean;
     }>>;
+    /**
+   * Get Shell records filtered by shell type
+   * @param shellType Shell type to filter by (default: 'Projects')
+   * @param options Request options
+   * @returns Array of shell records
+   */
+    getShells(shellType?: string, options?: {
+        timeout?: number;
+    }): Promise<any[]>;
+    /**
+     * Get WBS records for a given project
+     * @param projectNumber Project number to retrieve WBS for
+     * @param options Request options
+     * @returns Array of WBS records
+     */
+    getWBS(projectNumber: string, options?: {
+        timeout?: number;
+    }): Promise<any[]>;
 }
