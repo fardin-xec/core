@@ -118,6 +118,37 @@ export class UnifierRESTService {
     }
   }
 
+  public async getUDRRecordsProjects(
+    udrReportName: string,
+    project_number: string,
+    options: { timeout?: number } = {}
+  ): Promise<any[]> {
+    try {
+      const token = await this.getToken();
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+      const rest = new REST(
+        this.baseURL,
+        {},
+        { type: 'BEARER', token },
+        { timeout: options.timeout || this.options.timeout, responseType: 'json' }
+      );
+
+      const resp = await rest.post('v1/data/udr/get/'+project_number, {
+        reportname: udrReportName
+      });
+
+      if (resp.data.status !== 200) {
+        throw new Error('Failed to fetch UDR records: ' + resp.data?.message?.toString());
+      }
+
+      return resp.data.data || [];
+    } catch (e) {
+      const _e: AxiosError = e;
+      const message = _e.isAxiosError ? _e.toJSON() : _e.message;
+      throw new Error('Unifier REST API UDR fetch failed. Cause: ' + JSON.stringify(message));
+    }
+  }
+
   public async createBPRecord<T>(
     projectNumber: string,
     bpName: string,

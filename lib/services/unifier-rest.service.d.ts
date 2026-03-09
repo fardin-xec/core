@@ -15,6 +15,9 @@ export declare class UnifierRESTService {
     getUDRRecords(udrReportName: string, options?: {
         timeout?: number;
     }): Promise<any[]>;
+    getUDRRecordsProjects(udrReportName: string, project_number: string, options?: {
+        timeout?: number;
+    }): Promise<any[]>;
     createBPRecord<T>(projectNumber: string, bpName: string, data: T, options?: {
         timeout?: number;
     }): Promise<any>;
