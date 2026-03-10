@@ -132,6 +132,10 @@ export class UnifierRESTService {
         { type: 'BEARER', token },
         { timeout: options.timeout || this.options.timeout, responseType: 'json' }
       );
+      console.log('Calling UDR with:', {
+  url: 'v1/data/udr/get/' + project_number,
+  reportname: udrReportName
+});
 
       const resp = await rest.post('v1/data/udr/get/'+project_number, {
         reportname: udrReportName
