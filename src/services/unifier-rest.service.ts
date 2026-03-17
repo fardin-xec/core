@@ -118,6 +118,41 @@ export class UnifierRESTService {
     }
   }
 
+  public async getUDRRecordsProjects(
+    udrReportName: string,
+    project_number: string,
+    options: { timeout?: number } = {}
+  ): Promise<any[]> {
+    try {
+      const token = await this.getToken();
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+      const rest = new REST(
+        this.baseURL,
+        {},
+        { type: 'BEARER', token },
+        { timeout: options.timeout || this.options.timeout, responseType: 'json' }
+      );
+      console.log('Calling UDR with:', {
+  url: 'v1/data/udr/get/' + project_number,
+  reportname: udrReportName
+});
+
+      const resp = await rest.post('v1/data/udr/get/'+project_number, {
+        reportname: udrReportName
+      });
+
+      if (resp.data.status !== 200) {
+        throw new Error('Failed to fetch UDR records: ' + resp.data?.message?.toString());
+      }
+
+      return resp.data.data || [];
+    } catch (e) {
+      const _e: AxiosError = e;
+      const message = _e.isAxiosError ? _e.toJSON() : _e.message;
+      throw new Error('Unifier REST API UDR fetch failed. Cause: ' + JSON.stringify(message));
+    }
+  }
+
   public async createBPRecord<T>(
     projectNumber: string,
     bpName: string,
@@ -557,4 +592,77 @@ public async updateBPRecordByJSON<T extends { record_no: string }>(
       throw new Error('Unifier REST API attachment download failed. Cause: ' + JSON.stringify(message));
     }
   }
+  /**
+ * Get Shell records filtered by shell type
+ * @param shellType Shell type to filter by (default: 'Projects')
+ * @param options Request options
+ * @returns Array of shell records
+ */
+public async getShells(
+  shellType: string = 'Projects',
+  options: { timeout?: number } = {}
+): Promise<any[]> {
+  try {
+    const token = await this.getToken();
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+    const rest = new REST(
+      this.baseURL,
+      {},
+      { type: 'BEARER', token },
+      { timeout: options.timeout || this.options.timeout, responseType: 'json' }
+    );
+
+    const filterParam = JSON.stringify({ filter: { shell_type: shellType } });
+
+    const resp = await rest.get(
+      `v2/admin/shell?options=${encodeURIComponent(filterParam)}`
+    );
+
+    if (resp.data.status !== 200) {
+      throw new Error('Failed to fetch shells: ' + resp.data?.message?.toString());
+    }
+
+    return resp.data.data || [];
+  } catch (e) {
+    const _e: AxiosError = e;
+    const message = _e.isAxiosError ? _e.toJSON() : _e.message;
+    throw new Error('Unifier REST API Shell fetch failed. Cause: ' + JSON.stringify(message));
+  }
+}
+
+/**
+ * Get WBS records for a given project
+ * @param projectNumber Project number to retrieve WBS for
+ * @param options Request options
+ * @returns Array of WBS records
+ */
+public async getWBS(
+  projectNumber: string,
+  options: { timeout?: number } = {}
+): Promise<any[]> {
+  try {
+    const token = await this.getToken();
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+    const rest = new REST(
+      this.baseURL,
+      {},
+      { type: 'BEARER', token },
+      { timeout: options.timeout || this.options.timeout, responseType: 'json' }
+    );
+
+    const resp = await rest.get(`v2/wbs?project_number=${encodeURIComponent(projectNumber)}`);
+
+    if (resp.data.status !== 200) {
+      throw new Error('Failed to fetch WBS records: ' + resp.data?.message?.toString());
+    }
+
+    return resp.data.data || [];
+  } catch (e) {
+    const _e: AxiosError = e;
+    const message = _e.isAxiosError ? _e.toJSON() : _e.message;
+    throw new Error('Unifier REST API WBS fetch failed. Cause: ' + JSON.stringify(message));
+  }
+}
 }
