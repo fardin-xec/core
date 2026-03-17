@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { WorkflowBPRequest } from '../model/bp-request.model';
 export declare class UnifierRESTService {
     private baseURL;
@@ -11,103 +10,45 @@ export declare class UnifierRESTService {
     private getToken;
     updateBPRecord<T>(bp: WorkflowBPRequest<T>, options?: {
         timeout: number;
-    }): Promise<any>;
+    }): Promise<unknown>;
     getUDRRecords(udrReportName: string, options?: {
         timeout?: number;
-    }): Promise<any[]>;
+    }): Promise<unknown[]>;
     getUDRRecordsProjects(udrReportName: string, project_number: string, options?: {
         timeout?: number;
-    }): Promise<any[]>;
+    }): Promise<unknown[]>;
     createBPRecord<T>(projectNumber: string, bpName: string, data: T, options?: {
         timeout?: number;
-    }): Promise<any>;
+    }): Promise<unknown>;
     createBPCustomeRecord<T>(projectNumber: string, payload: T, options?: {
         timeout?: number;
-    }): Promise<any>;
-    /**
-   * Update a BP record using a JSON body
-   * @param projectNumber Project number
-   * @param bpName Business Process name
-   * @param data Record data to update (must include record_no field)
-   * @param options Request options
-   * @returns Updated BP record response
-   */
+    }): Promise<unknown>;
     updateBPRecordByJSON<T extends {
         record_no: string;
     }>(projectNumber: string, bpName: string, data: T, options?: {
         timeout?: number;
-    }): Promise<any>;
-    /**
-     * Get BP record by record number with optional attachments
-     * @param projectNumber Project number
-     * @param bpName Business Process name
-     * @param recordNo Record number to retrieve
-     * @param includeAttachments Whether to include attachments (default: false)
-     * @param options Request options
-     * @returns BP record with optional attachments
-     */
+    }): Promise<unknown>;
     getBPRecord(projectNumber: string, bpName: string, recordNo: string, includeAttachments?: boolean, options?: {
         timeout?: number;
-    }): Promise<any>;
-    /**
-     * Helper method to determine MIME type from file name
-     */
+    }): Promise<unknown>;
     private getMimeTypeFromFileName;
-    /**
-     * Get list of attachments for a BP record
-     * @param projectNumber Project number
-     * @param bpName Business Process name
-     * @param recordNo Record number
-     * @param options Request options
-     * @returns Array of attachment metadata
-     */
     getBPAttachmentsList(projectNumber: string, bpName: string, recordNo: string, options?: {
         timeout?: number;
-    }): Promise<any[]>;
-    /**
-     * Get attachment file from BP record and automatically unzip if it's a zip file
-     * @param projectNumber Project number
-     * @param bpName Business Process name (optional, can be null)
-     * @param recordNo Record number (optional, can be null)
-     * @param fileId File ID to download
-     * @param options Request options
-     * @returns Buffer containing the unzipped file data (first file in zip) or original file if not zipped
-     */
-    getBPAttachment(projectNumber: string, bpName: string | null, recordNo: string | null, fileId: string | number, options?: {
+    }): Promise<Record<string, unknown>[]>;
+    getBPAttachment(projectNumber: string, _bpName: string | null, _recordNo: string | null, fileId: string | number, options?: {
         timeout?: number;
-    }): Promise<Buffer>;
-    /**
-     * Get all files from a zipped attachment
-     * @param projectNumber Project number
-     * @param bpName Business Process name (optional, can be null)
-     * @param recordNo Record number (optional, can be null)
-     * @param fileId File ID to download
-     * @param options Request options
-     * @returns Array of objects containing file names and buffers
-     */
-    getBPAttachmentAllFiles(projectNumber: string, bpName: string | null, recordNo: string | null, fileId: string | number, options?: {
+    }): Promise<Uint8Array>;
+    getBPAttachmentAllFiles(projectNumber: string, _bpName: string | null, _recordNo: string | null, fileId: string | number, options?: {
         timeout?: number;
     }): Promise<Array<{
         fileName: string;
-        fileBuffer: Buffer;
+        fileBuffer: Uint8Array;
         isDirectory: boolean;
     }>>;
-    /**
-   * Get Shell records filtered by shell type
-   * @param shellType Shell type to filter by (default: 'Projects')
-   * @param options Request options
-   * @returns Array of shell records
-   */
     getShells(shellType?: string, options?: {
         timeout?: number;
-    }): Promise<any[]>;
-    /**
-     * Get WBS records for a given project
-     * @param projectNumber Project number to retrieve WBS for
-     * @param options Request options
-     * @returns Array of WBS records
-     */
+    }): Promise<unknown[]>;
     getWBS(projectNumber: string, options?: {
         timeout?: number;
-    }): Promise<any[]>;
+    }): Promise<unknown[]>;
 }
