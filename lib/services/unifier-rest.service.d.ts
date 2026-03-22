@@ -8,7 +8,7 @@ export declare class UnifierRESTService {
         timeout: number;
     });
     private getToken;
-    updateBPRecord<T>(bp: WorkflowBPRequest<T>, options?: {
+    updateBPRecord<T>(bp: WorkflowBPRequest<T>, options: {
         timeout: number;
     }): Promise<unknown>;
     getUDRRecords(udrReportName: string, options?: {

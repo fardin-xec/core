@@ -11,11 +11,11 @@ export declare class REST {
         responseType: ResponseType;
     });
     private getAuthHeader;
-    request(config: AxiosRequestConfig): Promise<import("axios").AxiosResponse<any>>;
-    get(url: string, config?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<any>>;
-    delete(url: string, config?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<any>>;
-    head(url: string, config?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<any>>;
-    post(url: string, data: any, config?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<any>>;
-    put(url: string, data: any, config?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<any>>;
-    patch(url: string, data: any, config?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<any>>;
+    request(config: AxiosRequestConfig): Promise<import("axios").AxiosResponse<any, any, {}>>;
+    get(url: string, config?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<any, any, {}>>;
+    delete(url: string, config?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<any, any, {}>>;
+    head(url: string, config?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<any, any, {}>>;
+    post(url: string, data: any, config?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<any, any, {}>>;
+    put(url: string, data: any, config?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<any, any, {}>>;
+    patch(url: string, data: any, config?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<any, any, {}>>;
 }

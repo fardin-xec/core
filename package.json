@@ -14,22 +14,23 @@
     "lib"
   ],
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
     "@ashghal-apms/core": "file:",
     "adm-zip": "^0.5.16",
-    "axios": "^0.19.2",
+    "axios": "^1.13.6",
     "dotenv": "^6.2.0",
-    "fast-xml-parser": "^3.16.0",
+    "fast-xml-parser": "^5.5.8",
     "he": "^1.2.0",
     "lodash": "^4.17.11",
     "log4js": "^6.1.2",
     "moment": "^2.24.0",
-    "soap": "^0.31.0"
+    "soap": "^1.8.0"
   },
   "devDependencies": {
     "@types/node": "^10.12.18",
-    "typescript": "^3.2.2"
+    "typescript": "^5.9.3"
   }
 }

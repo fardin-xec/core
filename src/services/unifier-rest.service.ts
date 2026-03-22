@@ -68,7 +68,7 @@ export class UnifierRESTService {
 
   public async updateBPRecord<T>(
     bp: WorkflowBPRequest<T>,
-    options: { timeout: number } = { timeout: null }
+    options: { timeout: number }
   ): Promise<unknown> {
     try {
       bp.workflow = bp.workflow || ({} as any);
@@ -77,10 +77,10 @@ export class UnifierRESTService {
       if (bp.lineItemIdentifier) {
         _options.LineItemIdentifier = bp.lineItemIdentifier;
       }
-      if (bp.workflow.currentStepName && bp.workflow.action) {
+      if (bp.workflow?.currentStepName && bp.workflow?.action) {
         _options.workflow_details = {
-          WFCurrentStepName: bp.workflow.currentStepName,
-          WFActionName: bp.workflow.action
+          WFCurrentStepName: bp.workflow?.currentStepName,
+          WFActionName: bp.workflow?.action
         };
       }
 
